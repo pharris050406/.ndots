@@ -1,0 +1,15 @@
+# Required paths
+music_directory "~/Music"
+playlist_directory "~/Music/Playlists"
+db_file            "~/.config/mpd/database"
+log_file           "~/.config/mpd/log"
+pid_file           "~/.config/mpd/pid"
+state_file         "~/.config/mpd/state"
+# stop it from playing shit when you login
+restore_paused "yes"
+
+audio_output {
+    type            "pipewire"
+    name            "PipeWire Output"
+    mixer_type	    "software"
+}
