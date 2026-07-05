@@ -23,7 +23,7 @@
 	networking.networkmanager.enable = true;
 
 	time.timeZone = "America/Los_Angeles";
-
+	services.openssh.enable = true;
 	services.flatpak.enable = true;
 	services.mullvad-vpn.enable = true;
 	services.resolved.enable = true;	
@@ -64,6 +64,7 @@
 		zip
 		unzip
 		git 
+		cloudflared
 		qbittorrent
 		mullvad
 		android-tools
