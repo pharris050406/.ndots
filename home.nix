@@ -14,7 +14,6 @@
 		ffmpeg
 		
 		# proprietary garbage
-		discord
 
 	];
 
