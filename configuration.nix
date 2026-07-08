@@ -4,8 +4,11 @@
 	];
 
 	# Automatic updating
-	system.autoUpgrade.enable=true;
-	system.autoUpgrade.dates = "weekly";
+	system.autoUpgrade = {
+		enable = true;
+		dates = "weekly";
+		flake = "/home/p/.ndots";
+	};
 
 	# Automatically cleanup old builds
 	nix.gc.automatic = true;
@@ -58,12 +61,13 @@
 
 	programs.firefox.enable = true;
 	programs.steam.enable = true;
-	 environment.systemPackages = with pkgs; [
+	environment.systemPackages = with pkgs; [
  	 # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
 		wget
 		zip
 		unzip
 		git 
+		neovim
 		cloudflared
 		qbittorrent
 		mullvad
@@ -75,6 +79,15 @@
 		discord
 	  ];
 
+	programs.git ={
+		enable = true;
+		config ={
+			safe ={
+			directory = "${config.users.users.p.home}/.ndots";
+			};
+		};
+	};
+	
 	programs.sway={
 		enable=true;
 		wrapperFeatures.gtk=true;
