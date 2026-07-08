@@ -1,8 +1,4 @@
 { config, lib, pkgs, ... }:{
-	imports = [ # Include the results of the hardware scan.
-		./hardware-configuration.nix
-	];
-
 	# Automatic updating
 	system.autoUpgrade = {
 		enable = true;
@@ -20,7 +16,7 @@
 	boot.loader.systemd-boot.enable = true;
 	boot.loader.efi.canTouchEfiVariables = true;
 	nixpkgs.config.allowUnfree = true;
-	networking.hostName = "pnix"; # Define your hostname.
+	# networking.hostName = "pnix"; # Define your hostname.
 
 
 	networking.networkmanager.enable = true;
@@ -68,15 +64,6 @@
 		unzip
 		git 
 		neovim
-		cloudflared
-		qbittorrent
-		mullvad
-		android-tools
-		mpv
-		ffmpeg
-		yazi
-		
-		discord
 	  ];
 
 	programs.git ={

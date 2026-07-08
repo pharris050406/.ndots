@@ -8,10 +8,11 @@
 		};
 	};
 	outputs={self, nixpkgs, home-manager, ...}:{
-		nixosConfigurations.pnix = nixpkgs.lib.nixosSystem{
+		nixosConfigurations."p-desk" = nixpkgs.lib.nixosSystem{
 			system="x86_64-linux";
 			modules=[
-				./configuration.nix
+				./common.nix
+				./hosts/p-desk/configuration.nix
 				home-manager.nixosModules.home-manager{
 					home-manager={
 						useGlobalPkgs=true;

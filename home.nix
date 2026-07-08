@@ -8,6 +8,14 @@
 	home.packages=with pkgs;[
 		mpc
 		rmpc
+		android-tools
+		qbittorrent
+		mpv
+		ffmpeg
+		
+		# proprietary garbage
+		discord
+
 	];
 
 	programs.bash={
@@ -22,12 +30,15 @@
 		enable=true;
 		musicDirectory="${config.home.homeDirectory}/Music";
 		playlistDirectory="${config.home.homeDirectory}/Music/Playlists";
+		
 		extraConfig=''
-		audio_output {
-			type		"pipewire"
-			name		"Pipewire Output"
-			mixer_type      "software"
-		}
+			restore_paused		"yes"
+
+			audio_output {
+				type		"pipewire"
+				name		"Pipewire Output"
+				mixer_type	"software"
+			}
 		'';
 	};
 
