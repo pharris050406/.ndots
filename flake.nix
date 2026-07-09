@@ -12,7 +12,7 @@
 			system="x86_64-linux";
 			modules=[
 				./common.nix
-				./hosts/p-desk/configuration.nix
+				./hosts/pdesk/configuration.nix
 				home-manager.nixosModules.home-manager{
 					home-manager={
 						useGlobalPkgs=true;
@@ -28,7 +28,7 @@
 			system="x86_64-linux";
 			modules=[
 				./common.nix
-				./hosts/p-top/configuration.nix
+				./hosts/ptop/configuration.nix
 
 				home-manager.nixosModules.home-manager{
 					home-manager={

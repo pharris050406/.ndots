@@ -8,6 +8,9 @@
 	
 	environment.systemPackages = with pkgs;[
 		# desktop-specific system packages go here	
+		
+		# proprietary bloat below
+		discord
 	];
 	programs.steam.enable=true;
 }

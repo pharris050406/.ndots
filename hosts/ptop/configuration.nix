@@ -7,6 +7,6 @@
 	system.stateVersion="26.05";
 	
 	environment.systemPackages = with pkgs;[
-		# desktop-specific system packages go here	
+		# laptop-specific system packages go here	
 	];
 }
