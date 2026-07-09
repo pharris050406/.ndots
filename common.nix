@@ -63,6 +63,7 @@
 		unzip
 		git 
 		neovim
+		yazi
 	  ];
 
 	programs.git ={
