@@ -3,7 +3,7 @@
 		./hardware-configuration.nix
 	];
 
-	networking.hostName = "p-desk";
+	networking.hostName = "ptop";
 	system.stateVersion="26.05";
 	
 	environment.systemPackages = with pkgs;[

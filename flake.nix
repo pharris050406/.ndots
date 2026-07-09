@@ -8,7 +8,7 @@
 		};
 	};
 	outputs={self, nixpkgs, home-manager, ...}:{
-		nixosConfigurations."p-desk" = nixpkgs.lib.nixosSystem{
+		nixosConfigurations."pdesk" = nixpkgs.lib.nixosSystem{
 			system="x86_64-linux";
 			modules=[
 				./common.nix
@@ -24,7 +24,7 @@
 			];
 		};
 
-		nixosConfigurations."p-top" = nixpkgs.lib.nixosSystem{
+		nixosConfigurations."ptop" = nixpkgs.lib.nixosSystem{
 			system="x86_64-linux";
 			modules=[
 				./common.nix
