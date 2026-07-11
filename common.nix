@@ -1,8 +1,9 @@
 { config, lib, pkgs, ... }:{
+
 	# Automatic updating
 	system.autoUpgrade = {
 		enable = true;
-		dates = "weekly";
+		dates = "daily";
 		flake = "/home/p/.ndots";
 	};
 
@@ -26,6 +27,20 @@
 	services.flatpak.enable = true;
 	services.mullvad-vpn.enable = true;
 	services.resolved.enable = true;	
+	
+	environment.systemPackages = with pkgs; [
+ 	 # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+		wget
+		zip
+		unzip
+		git 
+		yazi
+		wl-clipboard
+		ripgrep
+		tree-sitter
+		gcc
+		gnumake
+	  ];
 	systemd.services.mullvad-daemon = {
 	postStart = let
 		mullvadBin = "${config.services.mullvad-vpn.package}/bin/mullvad";
@@ -46,26 +61,25 @@
 		enable = true;
 		pulse.enable = true;
 	};
-	
-	users.users.p = {
-		isNormalUser = true;
-		extraGroups = [ "wheel" ];  # Enable ‘sudo’ for the user.
-		packages = with pkgs; [
-			tree
-			];
+
+	xdg.portal={
+	    enable = true;
+	    extraPortals = [
+		pkgs.xdg-desktop-portal-wlr
+		pkgs.xdg-desktop-portal-gtk
+	    ];
+	    config = {
+		common = {
+		  "org.freedesktop.impl.portal.Settings" = [ "gtk" ];
+		  default = [ "wlr" "gtk" ];
+		};
+	    };
 	};
 
 	programs.firefox.enable = true;
-	environment.systemPackages = with pkgs; [
- 	 # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-		wget
-		zip
-		unzip
-		git 
-		neovim
-		yazi
-	  ];
+	programs.dconf.enable = true;	
 
+	programs.nix-ld.enable = true;
 	programs.git ={
 		enable = true;
 		config ={
@@ -78,12 +92,20 @@
 	programs.sway={
 		enable=true;
 		wrapperFeatures.gtk=true;
-	};	
+		package = pkgs.swayfx;
+	};
 
 	fonts.packages=with pkgs;[
 		nerd-fonts.jetbrains-mono
 	];
 
+	users.users.p = {
+		isNormalUser = true;
+		extraGroups = [ "wheel" ];  # Enable ‘sudo’ for the user.
+		packages = with pkgs; [
+			tree
+			];
+	};
 	nix.settings.experimental-features=["nix-command" "flakes"];
 
 	system.stateVersion = "26.05"; # Did you read the comment? # maybe...
