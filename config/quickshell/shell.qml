@@ -5,19 +5,18 @@ import QtQuick.Layouts
 PanelWindow {
     id: root
 
-    // Base Colors & Typography
     property color colBg: "#80000000"
     property color colFg: "#ffffff"
-    property color colMuted: "#565f89"   // dim/inactive text, separators, secondary info
-    property color colBlue: "#7aa2f7"    // neutral info — media, workspace focus, generic accents
-    property color colCyan: "#7dcfff"    // network/wifi, connectivity
-    property color colGreen: "#40eb34"   // good state — battery ok, connected, low load
-    property color colYellow: "#e0af68"  // caution — moderate CPU/mem, medium battery
-    property color colOrange: "#ff9e64"  // elevated warning, between yellow and red
-    property color colRed: "#f7768e"     // critical — low battery, high temp/CPU, disconnected
-    property color colPurple: "#bb9af7"  // reserved for something distinct — maybe a "now playing" glyph
+    property color colMuted: "#565f89"   
+    property color colBlue: "#7aa2f7"    
+    property color colCyan: "#00f7ff"    
+    property color colGreen: "#40eb34"   
+    property color colYellow: "#e0af68"
+    property color colOrange: "#ff8000"  
+    property color colRed: "#f7768e"     
+    property color colPurple: "#c800ff" 
     property string fontFamily: "JetBrainsMono Nerd Font"
-    property int fontSize: 12 
+    property int fontSize: 13
 
     anchors.top: true
     anchors.left: true
@@ -41,13 +40,12 @@ PanelWindow {
             fontSize: root.fontSize
         }
 
-        // 2. Spacer (Pushes remaining items to the right)
+        // Spacer (Pushes remaining items to the right)
         Item { 
             Layout.fillWidth: true 
         }
         
 
-        // 3. Music Player (Aligned Right)
 	MusicWidget {
 	    property int widget_width: 300
             Layout.preferredWidth: widget_width 
@@ -66,7 +64,6 @@ PanelWindow {
             fontSize: root.fontSize
 
 	}
-
 	IpWidget{
 	    Layout.fillHeight: true
 	    accentColor: root.colGreen
@@ -82,10 +79,9 @@ PanelWindow {
             fontName: root.fontFamily
             fontSize: root.fontSize
 	}        
-        // 4. CPU Monitor (Aligned Far Right)
         CpuWidget {
             Layout.fillHeight: true
-            accentColor: root.colYellow
+            accentColor: root.colOrange
             textColor: root.colFg
             fontName: root.fontFamily
             fontSize: root.fontSize

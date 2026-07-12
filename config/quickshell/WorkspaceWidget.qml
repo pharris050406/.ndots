@@ -40,7 +40,8 @@ RowLayout {
                 color: isActive ? root.textColor : "#888888"
 
                 font {
-                    family: root.fontName
+		    family: root.fontName
+		    pixelSize: root.fontSize
                 }
             }
 
