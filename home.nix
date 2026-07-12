@@ -84,6 +84,9 @@
 
 	programs.btop={
 		enable=true;
+		settings={
+		    theme_background = false;
+	    };
 	};
 
 
@@ -106,6 +109,12 @@
 	    source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/waybar";
 	    recursive = true;
 	};
+	
+	xdg.configFile."rmpc"={
+	    source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/rmpc";
+	    recursive = true;
+	};
+
 
 	services.mako={
 	    enable = true;  
