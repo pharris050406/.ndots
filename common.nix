@@ -41,6 +41,15 @@
 		gcc
 		gnumake
 	  ];
+
+	  environment.sessionVariables = {
+  NIXOS_OZONE_WL = "1";      # Electron/Chromium apps (Discord, etc) use native Wayland + portal capture
+  MOZ_ENABLE_WAYLAND = "1";  # Firefox: Wayland + PipeWire screencast path
+};
+
+security.rtkit.enable = true;  # recommended alongside pipewire, not screenshare-critical but you're missing it
+
+
 	systemd.services.mullvad-daemon = {
 	postStart = let
 		mullvadBin = "${config.services.mullvad-vpn.package}/bin/mullvad";

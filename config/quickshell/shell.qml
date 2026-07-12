@@ -1,18 +1,23 @@
 import Quickshell
-import Quickshell.Wayland
-import Quickshell.I3
-import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
 
-PanelWindow{
+PanelWindow {
     id: root
 
-    property color colBg: "#1a1b26"
-    property color colCyan: "#0db9d7"
-    property color colBlue: "#7aa2f7"
-    property color colYellow: "#e0af68"
+    // Base Colors & Typography
+    property color colBg: "#80000000"
+    property color colFg: "#ffffff"
+    property color colMuted: "#565f89"   // dim/inactive text, separators, secondary info
+    property color colBlue: "#7aa2f7"    // neutral info — media, workspace focus, generic accents
+    property color colCyan: "#7dcfff"    // network/wifi, connectivity
+    property color colGreen: "#9ece6a"   // good state — battery ok, connected, low load
+    property color colYellow: "#e0af68"  // caution — moderate CPU/mem, medium battery
+    property color colOrange: "#ff9e64"  // elevated warning, between yellow and red
+    property color colRed: "#f7768e"     // critical — low battery, high temp/CPU, disconnected
+    property color colPurple: "#bb9af7"  // reserved for something distinct — maybe a "now playing" glyph
     property string fontFamily: "JetBrainsMono Nerd Font"
+    property int fontSize: 12 
 
     anchors.top: true
     anchors.left: true
@@ -20,84 +25,53 @@ PanelWindow{
     implicitHeight: 25
     color: colBg
 
-    property int cpuUsage: 0
-    property var lastCpuIdle: 0
-    property var lastCpuTotal: 0
-
-    Process{
-	id: cpuProc
-	command: ["sh", "-c", "head -1 /proc/stat"]
-
-	stdout: SplitParser{
-	    onRead: data => {
-		var p = data.trim().split(/\s+/)
-		var idle = parseInt(p[4]) + parseInt(p[5])
-		var total = p.slice(1,8).reduce((a, b) => a + parseInt(b), 0)
-
-		if(lastCpuTotal >0){
-		    cpuUsage = Math.round(100 * (1-(idle - lastCpuIdle) / (total - lastCpuTotal)))
-		}
-		lastCpuTotal = total
-		lastCpuIdle = idle
-	    }
-	}
-	Component.onCompleted: running = true
-    }
-	
-    Timer{
-	interval: 2000
-	running: true
-	repeat: true
-	onTriggered: cpuProc.running = true
-    }
-
-
-RowLayout {
+    // --- MAIN BAR LAYOUT ---
+    RowLayout {
         anchors.fill: parent
         anchors.margins: 0
-        spacing:0 
-	Repeater {
-            model: 10
+	spacing: 20
 
-            Rectangle {
-                id: wsSquare
-                Layout.preferredWidth: 20 // Width of your square
-                Layout.fillHeight: true   // Stretches to fit the panel height
 
-                property var ws: I3.workspaces.values.find(w => w.number == index + 1)
-                property bool isActive: ws ? ws.focused : false
-
-                color: isActive ? root.colCyan : (ws ? "#24283b" : "transparent")
-
-                Text {
-                    anchors.centerIn: parent // 3. Pins the number exactly in the center of the square
-                    text: index + 1
-                    
-		    color: wsSquare.isActive ? root.colBg : (wsSquare.ws ? root.colBlue : "#444b6a")
-                    
-                    font.pixelSize: 11
-                    font.bold: true
-                }
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: I3.dispatch("workspace " + (index + 1))
-                }
-            }
+        // 1. Workspaces (Aligned Left)
+        WorkspaceWidget {
+            Layout.fillHeight: true
+            accentColor: root.colCyan
+            textColor: root.colFg
+            fontName: root.fontFamily
+            fontSize: root.fontSize
         }
-	Item{Layout.fillWidth: true}
-	
-	Text{
-	    text: "CPU: " + cpuUsage + "%"
-	    color: root.colYellow
-	    font{
-		family: root.fontFamily
-		pixelSize: root.fontSize
-		bold: true
-	    }
-	}
+
+        // 2. Spacer (Pushes remaining items to the right)
+        Item { 
+            Layout.fillWidth: true 
+        }
+        
+        // 3. Music Player (Aligned Right)
+	MusicWidget {
+	    property int widget_width: 300
+            Layout.preferredWidth: widget_width 
+            Layout.maximumWidth: widget_width
+            Layout.fillHeight: true
+            accentColor: root.colBlue
+            textColor: root.colFg
+            fontName: root.fontFamily
+            fontSize: root.fontSize
+        }
+
+	MemWidget{
+	    Layout.fillHeight: true
+	    accentColor: root.colPurple
+            textColor: root.colFg
+            fontName: root.fontFamily
+            fontSize: root.fontSize
+	}        
+        // 4. CPU Monitor (Aligned Far Right)
+        CpuWidget {
+            Layout.fillHeight: true
+            accentColor: root.colYellow
+            textColor: root.colFg
+            fontName: root.fontFamily
+            fontSize: root.fontSize
+        }
     }
 }
-
-

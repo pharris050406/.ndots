@@ -15,7 +15,6 @@
 		rmpc
 		android-tools
 		qbittorrent
-		mpv
 		ffmpeg
 		autotiling
 		waybar
@@ -57,6 +56,12 @@
 		};
 	};
 
+	programs.mpv = {
+	    enable = true;
+	    scripts = [
+	      pkgs.mpvScripts.mpris
+	    ];
+	  };
 	dconf.settings = {
 	    "org/gnome/desktop/interface" = {
 		color-scheme = "prefer-dark";
@@ -109,7 +114,9 @@
 	services.mpd-mpris={
 	    enable = true;
 	};
-	    
+
+	services.playerctld.enable = true;
+
 	services.mpd={
 		enable=true;
 		musicDirectory="${config.home.homeDirectory}/Music";

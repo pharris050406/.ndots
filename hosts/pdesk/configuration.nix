@@ -31,7 +31,7 @@
 		# desktop-specific system packages go here	
 		
 		# proprietary bloat below
-		discord
+		discord-canary
 	];
 	programs.steam={
 	    enable = true;
