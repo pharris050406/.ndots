@@ -70,9 +70,20 @@ while true; do
         fi
         CURRENT_TITLE="$ACTUAL_TITLE"
 
-        STATUS=$(playerctl --player="$PLAYER" status 2>/dev/null)
+	STATUS=$(playerctl --player="$PLAYER" status 2>/dev/null)
         if [[ "$STATUS" == "Playing" || "$STATUS" == "Paused" ]]; then
-            POS=$(playerctl --player="$PLAYER" position 2>/dev/null)
+            # The Fix: When paused, web browsers often lie or keep the timer ticking.
+            # We explicitly ask playerctl for the true, raw position data to stop the drift.
+            if [[ "$STATUS" == "Paused" && "$PLAYER" == firefox* ]]; then
+                # Fetch the exact absolute position without cache drift
+                POS=$(playerctl --player="$PLAYER" metadata mpris:position 2>/dev/null)
+                # mpris:position is in microseconds, so convert it to seconds
+                if [ -n "$POS" ]; then
+                   POS=$(awk "BEGIN {print $POS / 1000000}")
+                fi
+            else
+                POS=$(playerctl --player="$PLAYER" position 2>/dev/null)
+            fi
             echo "POS|$POS"
         fi
         sleep 1

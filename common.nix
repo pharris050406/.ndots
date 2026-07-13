@@ -40,6 +40,7 @@
 		tree-sitter
 		gcc
 		gnumake
+		cloudflared
 	  ];
 
 	  environment.sessionVariables = {
@@ -70,7 +71,8 @@ security.rtkit.enable = true;  # recommended alongside pipewire, not screenshare
 		enable = true;
 		pulse.enable = true;
 	};
-
+	
+	services.cloudflared.enable = true;
 	hardware.bluetooth.enable = true;
 
 	hardware.bluetooth.powerOnBoot = true;

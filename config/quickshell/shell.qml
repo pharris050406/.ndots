@@ -47,7 +47,7 @@ PanelWindow {
         
 
 	MusicWidget {
-	    property int widget_width: 300
+	    property int widget_width: 325
             Layout.preferredWidth: widget_width 
             Layout.maximumWidth: widget_width
             Layout.fillHeight: true

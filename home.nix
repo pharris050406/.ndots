@@ -20,7 +20,7 @@
 		waybar
 		quickshell		
 		alsa-utils
-		
+	    		
 		yt-dlp
 		# proprietary garbage
 	];
@@ -138,7 +138,6 @@
 	};
 
 	services.playerctld.enable = true;
-
 	services.mpd={
 		enable=true;
 		musicDirectory="${config.home.homeDirectory}/Music";
