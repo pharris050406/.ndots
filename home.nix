@@ -18,8 +18,10 @@
 		ffmpeg
 		autotiling
 		waybar
-		quickshell
+		quickshell		
+		alsa-utils
 		
+		yt-dlp
 		# proprietary garbage
 	];
 
@@ -30,8 +32,14 @@
 			vim = "nvim";
 			yz = "yazi";
 			nrs = "sudo nixos-rebuild switch --flake ~/.ndots";
+			src = "source ~/.ndots/config/bash/.bash_aliases";
 		};
-		
+		initExtra = ''
+		    if [ -f ~/.ndots/config/bash/.bash_aliases ]; then
+			source ~/.ndots/config/bash/.bash_aliases
+		    fi
+		'';
+
 		profileExtra=''
 		   if [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
 			exec sway --unsupported-gpu
@@ -87,6 +95,11 @@
 		settings={
 		    theme_background = false;
 	    };
+	};
+
+	xdg.configFile."bash" = {
+		source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/bash";
+		recursive = true;
 	};
 
 

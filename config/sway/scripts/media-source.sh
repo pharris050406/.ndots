@@ -3,12 +3,36 @@
 STATE_FILE="$HOME/.cache/quickshell/selected-player"
 
 get_active_player() {
-    local pinned=$(cat "$STATE_FILE" 2>/dev/null)
-    if playerctl -l 2>/dev/null | grep -qx "$pinned"; then
-        echo "$pinned"
-    else
-        playerctl -l 2>/dev/null | head -n 1
+    local saved=$(cat "$STATE_FILE" 2>/dev/null)
+    local players=($(playerctl -l 2>/dev/null))
+    
+    if [ ${#players[@]} -eq 0 ]; then
+        return
     fi
+
+    if [ -n "$saved" ]; then
+        # Exact match
+        for p in "${players[@]}"; do
+            if [ "$p" == "$saved" ]; then
+                echo "$p"
+                return
+            fi
+        done
+        
+        # Base match (Firefox instance ID changed)
+        local base_saved="${saved%%.*}"
+        for p in "${players[@]}"; do
+            if [[ "$p" == "$base_saved"* ]]; then
+                echo "$p"
+                echo "$p" > "$STATE_FILE"
+                return
+            fi
+        done
+    fi
+    
+    # Fallback to first available
+    echo "${players[0]}"
+    echo "${players[0]}" > "$STATE_FILE"
 }
 
 while true; do
@@ -33,7 +57,7 @@ while true; do
             break # Player changed, restart pipeline
         fi
 
-        # Actively poll the title (Exactly what your media-control.sh does)
+        # Actively poll the title
         ACTUAL_TITLE=$(playerctl --player="$PLAYER" metadata --format "{{title}}" 2>/dev/null)
 
         # If the track changed, but --follow dropped the event (Spotify freeze)

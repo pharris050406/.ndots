@@ -13,12 +13,29 @@ if [ "${#PLAYERS[@]}" -eq 0 ]; then
     exit 1
 fi
 
-CURRENT=$(cat "$STATE_FILE" 2>/dev/null)
-
+SAVED=$(cat "$STATE_FILE" 2>/dev/null)
 INDEX=-1
-for i in "${!PLAYERS[@]}"; do
-    [ "${PLAYERS[$i]}" == "$CURRENT" ] && INDEX=$i && break
-done
+
+if [ -n "$SAVED" ]; then
+    # 1. Try exact match
+    for i in "${!PLAYERS[@]}"; do
+        if [ "${PLAYERS[$i]}" == "$SAVED" ]; then
+            INDEX=$i
+            break
+        fi
+    done
+
+    # 2. Try base match (fixes changing Firefox instance IDs)
+    if [ "$INDEX" -eq -1 ]; then
+        BASE_SAVED="${SAVED%%.*}"
+        for i in "${!PLAYERS[@]}"; do
+            if [[ "${PLAYERS[$i]}" == "$BASE_SAVED"* ]]; then
+                INDEX=$i
+                break
+            fi
+        done
+    fi
+fi
 
 NEXT_PLAYER="${PLAYERS[$(( (INDEX + 1) % ${#PLAYERS[@]} ))]}"
 

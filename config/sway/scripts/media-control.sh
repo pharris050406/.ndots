@@ -1,16 +1,48 @@
 #!/usr/bin/env bash
 
 STATE_FILE="$HOME/.cache/quickshell/selected-player"
-PLAYER=$(cat "$STATE_FILE" 2>/dev/null)
-[ -z "$PLAYER" ] && PLAYER="mpd"
+SAVED_PLAYER=$(cat "$STATE_FILE" 2>/dev/null)
 
-# 1. Validation: make sure the selected player is actually running
-if ! playerctl -l 2>/dev/null | grep -qx "$PLAYER"; then
-    notify-send -t 2000 "Media Control" "Selected player ($PLAYER) not found"
+# Get available players
+mapfile -t PLAYERS < <(playerctl -l 2>/dev/null)
+
+if [ "${#PLAYERS[@]}" -eq 0 ]; then
+    notify-send -t 2000 "Media Control" "No media players running"
     exit 1
 fi
 
-# 2. Execute playback against the pinned player specifically
+# 1. Validation & Resolution
+PLAYER=""
+
+if [ -n "$SAVED_PLAYER" ]; then
+    # Try exact match first
+    for p in "${PLAYERS[@]}"; do
+        if [ "$p" == "$SAVED_PLAYER" ]; then
+            PLAYER="$p"
+            break
+        fi
+    done
+
+    # Try base name match (for firefox.instance changes)
+    if [ -z "$PLAYER" ]; then
+        BASE_SAVED="${SAVED_PLAYER%%.*}"
+        for p in "${PLAYERS[@]}"; do
+            if [[ "$p" == "$BASE_SAVED"* ]]; then
+                PLAYER="$p"
+                echo "$PLAYER" > "$STATE_FILE" # Update state file with new instance
+                break
+            fi
+        done
+    fi
+fi
+
+# Fallback to the first available player
+if [ -z "$PLAYER" ]; then
+    PLAYER="${PLAYERS[0]}"
+    echo "$PLAYER" > "$STATE_FILE"
+fi
+
+# 2. Execute playback against the resolved player
 playerctl --player="$PLAYER" "$1"
 sleep 0.01 # Wait for metadata to catch up
 

@@ -43,7 +43,7 @@
 	  ];
 
 	  environment.sessionVariables = {
-  NIXOS_OZONE_WL = "1";      # Electron/Chromium apps (Discord, etc) use native Wayland + portal capture
+NIXOS_OZONE_WL = "1";      # Electron/Chromium apps (Discord, etc) use native Wayland + portal capture
   MOZ_ENABLE_WAYLAND = "1";  # Firefox: Wayland + PipeWire screencast path
 };
 
@@ -70,6 +70,11 @@ security.rtkit.enable = true;  # recommended alongside pipewire, not screenshare
 		enable = true;
 		pulse.enable = true;
 	};
+
+	hardware.bluetooth.enable = true;
+
+	hardware.bluetooth.powerOnBoot = true;
+
 
 	xdg.portal={
 	    enable = true;
