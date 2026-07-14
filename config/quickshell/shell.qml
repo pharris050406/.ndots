@@ -28,10 +28,9 @@ PanelWindow {
     RowLayout {
         anchors.fill: parent
         anchors.margins: 0
-	spacing: 20
+	spacing: 15
 
 
-        // 1. Workspaces (Aligned Left)
         WorkspaceWidget {
             Layout.fillHeight: true
             accentColor: root.colCyan
@@ -40,7 +39,6 @@ PanelWindow {
             fontSize: root.fontSize
         }
 
-        // Spacer (Pushes remaining items to the right)
         Item { 
             Layout.fillWidth: true 
         }
@@ -55,7 +53,14 @@ PanelWindow {
             textColor: root.colFg
             fontName: root.fontFamily
             fontSize: root.fontSize
-        }
+	}
+	BluetoothWidget {
+	    Layout.fillHeight: true
+	    accentColor: root.colBlue
+            textColor: root.colFg
+            fontName: root.fontFamily
+            fontSize: root.fontSize
+	}
 	VolumeWidget{
 	    Layout.fillHeight: true
 	    accentColor: root.colYellow

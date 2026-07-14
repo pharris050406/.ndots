@@ -11,9 +11,8 @@ RowLayout {
     property string fontName: "JetBrainsMono Nerd Font"
     property int fontSize: 12
     
-    // Properties to store dynamic states
     property string volumeStr: "0%"
-    property string volIcon: "󰕾" // Default fallback speaker icon
+    property string volIcon: "󰕾"
 
     spacing: 0
 
@@ -23,7 +22,6 @@ RowLayout {
 
     Process {
         id: getVolProc
-        // Shell pipeline that queries volume, mute status, and port type, returning them separated by a pipe '|'
         command: [
             "sh", "-c", 
             "VOL=$(pactl get-sink-volume @DEFAULT_SINK@ | head -n 1 | awk '{print $5}'); " +
@@ -37,7 +35,6 @@ RowLayout {
                 let trimmed = data.trim();
                 if (!trimmed) return;
                 
-                // Split the output pipeline: [Volume, MuteState, PortName]
                 let parts = trimmed.split('|');
                 if (parts.length < 3) return;
                 
@@ -47,17 +44,16 @@ RowLayout {
                 
                 root.volumeStr = vol;
 
-                // Icon selection logic mirroring Waybar
                 if (isMuted) {
-                    root.volIcon = "󰝟"; // Muted Icon
+                    root.volIcon = "󰝟";
                 } else if (port.includes("bluez") || port.includes("bluetooth") || port.includes("a2dp")) {
-                    root.volIcon = "󰂰"; // Bluetooth Audio Icon
+                    root.volIcon = "󰂰";
                 } else if (port.includes("headphone") || port.includes("headset")) {
-                    root.volIcon = "󰋋"; // Headphones Icon
+                    root.volIcon = "󰋋";
                 } else if (port.includes("hdmi") || port.includes("hdmi-output")) {
-                    root.volIcon = "󰽟"; // TV/HDMI Icon
+                    root.volIcon = "󰽟";
                 } else {
-                    root.volIcon = "󰕾"; // Default Speaker Icon
+                    root.volIcon = "󰕾";
                 }
             }
         }
@@ -69,7 +65,6 @@ RowLayout {
         
         stdout: SplitParser {
             onRead: data => {
-                // Now matching both sink volumes and server context shifts (like plugging in headphones)
                 if (data.includes("sink") || data.includes("server")) {
                     root.updateVolume()
                 }
@@ -82,9 +77,19 @@ RowLayout {
         }
     }
 
+    Process {
+        id: toggleMuteProc
+        command: ["pactl", "set-sink-mute", "@DEFAULT_SINK@", "toggle"]
+    }
+
     Text { text: "[ "; color: root.accentColor; font { family: root.fontName; pixelSize: root.fontSize } }
-    // Displays the dynamic Nerd Font Icon
     Text { text: root.volIcon + " "; color: root.textColor; font { family: root.fontName; pixelSize: root.fontSize } }
     Text { text: root.volumeStr.padStart(4, ' '); color: root.textColor; font { family: root.fontName; pixelSize: root.fontSize } }
     Text { text: " ]"; color: root.accentColor; font { family: root.fontName; pixelSize: root.fontSize } }
+
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: toggleMuteProc.running = true
+    }
 }
