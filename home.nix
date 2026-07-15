@@ -19,9 +19,12 @@
 		autotiling
 		waybar
 		quickshell		
-		alsa-utils
-	    		
+		alsa-utils	
 		yt-dlp
+		
+		vesktop
+		obs-studio
+		libreoffice
 		# proprietary garbage
 	];
 
