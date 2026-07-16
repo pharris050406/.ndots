@@ -6,33 +6,20 @@ get_active_player() {
     local saved=$(cat "$STATE_FILE" 2>/dev/null)
     local players=($(playerctl -l 2>/dev/null))
     
-    if [ ${#players[@]} -eq 0 ]; then
-        return
-    fi
-
+    if [ ${#players[@]} -eq 0 ]; then return; fi
     if [ -n "$saved" ]; then
-        # Exact match
         for p in "${players[@]}"; do
-            if [ "$p" == "$saved" ]; then
-                echo "$p"
-                return
-            fi
+            if [ "$p" == "$saved" ]; then echo "$p"; return; fi
         done
-        
-        # Base match (Firefox instance ID changed)
         local base_saved="${saved%%.*}"
         for p in "${players[@]}"; do
             if [[ "$p" == "$base_saved"* ]]; then
-                echo "$p"
-                echo "$p" > "$STATE_FILE"
+                echo "$p" | tee "$STATE_FILE"
                 return
             fi
         done
     fi
-    
-    # Fallback to first available
-    echo "${players[0]}"
-    echo "${players[0]}" > "$STATE_FILE"
+    echo "${players[0]}" | tee "$STATE_FILE"
 }
 
 while true; do
@@ -44,52 +31,44 @@ while true; do
         continue
     fi
 
-    # 1. Start the event listener for instant updates
     playerctl --player="$PLAYER" metadata --format "META|{{status}}|{{mpris:length}}|{{title}} - {{artist}}" --follow 2>/dev/null &
     META_PID=$!
-
     CURRENT_TITLE=""
 
-    # 2. The Watchdog Loop (Runs every 1 second to fetch position)
+    # The Watchdog Loop
     while kill -0 $META_PID 2>/dev/null; do
-        NEW_PLAYER=$(get_active_player)
+        # 1. Native bash read (0 forks instead of running playerctl -l)
+        read -r NEW_PLAYER < "$STATE_FILE"
         if [ "$NEW_PLAYER" != "$PLAYER" ]; then
-            break # Player changed, restart pipeline
+            break 
         fi
 
-        # Actively poll the title
-        ACTUAL_TITLE=$(playerctl --player="$PLAYER" metadata --format "{{title}}" 2>/dev/null)
+        # 2. Get Title and Status in one single process call
+        RAW_DATA=$(playerctl --player="$PLAYER" metadata --format "{{status}}|{{title}}" 2>/dev/null)
+        if [ -z "$RAW_DATA" ]; then break; fi # Player closed
+        
+        IFS='|' read -r STATUS ACTUAL_TITLE <<< "$RAW_DATA"
 
-        # If the track changed, but --follow dropped the event (Spotify freeze)
         if [ -n "$CURRENT_TITLE" ] && [ "$ACTUAL_TITLE" != "$CURRENT_TITLE" ]; then
-            # Force an immediate metadata update to QML
             playerctl --player="$PLAYER" metadata --format "META|{{status}}|{{mpris:length}}|{{title}} - {{artist}}" 2>/dev/null
-            
-            # Break the loop to kill the frozen follower and restart it
             break 
         fi
         CURRENT_TITLE="$ACTUAL_TITLE"
 
-	STATUS=$(playerctl --player="$PLAYER" status 2>/dev/null)
+        # 3. Position logic
         if [[ "$STATUS" == "Playing" || "$STATUS" == "Paused" ]]; then
-            # The Fix: When paused, web browsers often lie or keep the timer ticking.
-            # We explicitly ask playerctl for the true, raw position data to stop the drift.
             if [[ "$STATUS" == "Paused" && "$PLAYER" == firefox* ]]; then
-                # Fetch the exact absolute position without cache drift
                 POS=$(playerctl --player="$PLAYER" metadata mpris:position 2>/dev/null)
-                # mpris:position is in microseconds, so convert it to seconds
-                if [ -n "$POS" ]; then
-                   POS=$(awk "BEGIN {print $POS / 1000000}")
-                fi
+                if [ -n "$POS" ]; then POS=$(awk "BEGIN {print $POS / 1000000}"); fi
             else
                 POS=$(playerctl --player="$PLAYER" position 2>/dev/null)
             fi
             echo "POS|$POS"
         fi
+        
         sleep 1
     done
 
-    # Clean up the stuck background process before looping
     kill $META_PID 2>/dev/null
     wait $META_PID 2>/dev/null
 done
