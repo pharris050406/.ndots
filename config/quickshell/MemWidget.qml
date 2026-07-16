@@ -47,7 +47,6 @@ RowLayout{
     MouseArea{
         anchors.fill: parent
         cursorShape: Qt.PointingHandCursor
-        // Toggle updates the JsonAdapter property, triggering writeAdapter()
         onClicked: state.showActual = !state.showActual 
     }
 

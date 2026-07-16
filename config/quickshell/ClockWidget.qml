@@ -21,7 +21,7 @@ Item {
 
     FileView {
         id: stateFile
-        path: Quickshell.statePath("memWidgetState.json")
+        path: Quickshell.statePath("clockWidgetState.json")
         watchChanges: true
         onFileChanged: reload()
         onAdapterUpdated: writeAdapter()

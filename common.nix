@@ -1,4 +1,12 @@
-{ config, lib, pkgs, ... }:{
+{ config, lib, pkgs, inputs, ... }:{
+	
+	nixpkgs.overlays = [
+		(final: prev: {
+			quickshell = inputs.quickshell.packages.${prev.system}.default.override {
+				withJemalloc = true;
+			};
+		})
+	];
 
 	# Automatic updating
 	system.autoUpgrade = {

@@ -1,4 +1,4 @@
-{config, pkgs, lib, ...}:{
+{config, pkgs, lib, inputs, ...}:{
 
 	home.username="p";
 	home.homeDirectory="/home/p";
@@ -18,7 +18,7 @@
 		ffmpeg
 		autotiling
 		waybar
-		quickshell		
+		quickshell
 		alsa-utils	
 		yt-dlp
 		
