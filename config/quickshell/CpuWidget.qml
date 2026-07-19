@@ -19,7 +19,7 @@ RowLayout {
 
     Process {
         id: cpuProc
-        command: ["sh", "-c", "head -1 /proc/stat"]
+        command: ["sh", "-c", "while true; do head -1 /proc/stat; sleep 2; done"]
         stdout: SplitParser {
             onRead: data => {
                 var p = data.trim().split(/\s+/)
@@ -36,13 +36,6 @@ RowLayout {
         Component.onCompleted: running = true
     }
     
-    Timer {
-        interval: 2000
-        running: true
-        repeat: true
-        onTriggered: cpuProc.running = true
-    }
-
     Text { text: "[ "; color: root.accentColor; font { family: root.fontName; pixelSize: root.fontSize } }
     Text { text: "CPU:" + String(root.cpuUsage).padStart(3, ' ') + "%"; color: root.textColor; font { family: root.fontName; pixelSize: root.fontSize } }
     Text { text: " ]"; color: root.accentColor; font { family: root.fontName; pixelSize: root.fontSize } }

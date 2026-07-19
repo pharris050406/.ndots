@@ -33,6 +33,9 @@
 		# proprietary bloat below
 		discord-canary
 	];
+	environment.sessionVariables = {
+	  __NV_DISABLE_EXPLICIT_SYNC = "1";
+	};
 	programs.steam={
 	    enable = true;
 	    remotePlay.openFirewall = true;

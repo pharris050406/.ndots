@@ -17,7 +17,10 @@ return {
             "lua",
             "nix",
             "qml",
-            "ron"
+            "ron",
+	    "cpp",
+	    "c",
+	    "julia"
         })
     end
 }

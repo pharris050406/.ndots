@@ -30,7 +30,7 @@ RowLayout{
 
     Process{
         id:memProc
-        command: ["sh", "-c", "free | grep Mem"]
+        command: ["sh", "-c", "while true; do free | grep Mem; sleep 2; done"]
         stdout: SplitParser{
             onRead: data => {
                 var parts = data.trim().split(/\s+/)
@@ -50,12 +50,6 @@ RowLayout{
         onClicked: state.showActual = !state.showActual 
     }
 
-    Timer {
-        interval: 2000
-        running: true
-        repeat: true
-        onTriggered: memProc.running = true
-    }
 
     Text { text: "[ "; color: root.accentColor; font { family: root.fontName; pixelSize: root.fontSize } }
     

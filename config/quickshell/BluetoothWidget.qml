@@ -24,6 +24,7 @@ RowLayout {
         id: btProc
         command: [
             "sh", "-c",
+	    "while true; do " + 
             "if ! bluetoothctl show 2>/dev/null | grep -q 'Powered: yes'; then " +
             "echo 'off'; " +
             "else " +
@@ -39,7 +40,8 @@ RowLayout {
             "echo \"connected|$DEV\"; " +
             "fi; " +
             "fi; " +
-            "fi"
+	    "fi;" +
+	    "sleep 2; done" 
         ]
 
         stdout: SplitParser {
@@ -57,13 +59,6 @@ RowLayout {
         }
 
         Component.onCompleted: running = true
-    }
-
-    Timer {
-        interval: 2000
-        running: true
-        repeat: true
-        onTriggered: btProc.running = true
     }
 
     Process {

@@ -16,7 +16,7 @@ RowLayout {
 
     Process {
         id: ipProc
-        command: ["sh", "-c", "hostname -I | awk '{print $1}'"]
+        command: ["sh", "-c", "while true; do hostname -I | awk '{print $1}'; sleep 10; done"]
         
         // SplitParser splits by newlines ("\n") by default automatically
         stdout: SplitParser {
@@ -28,22 +28,9 @@ RowLayout {
             }
         }
 
-        onRunningChanged: {
-            if (!running) {
-                loopTimer.start()
-            }
-        }
-
         Component.onCompleted: running = true
     }
     
-    Timer {
-        id: loopTimer
-        interval: 2000
-        repeat: false
-        onTriggered: ipProc.running = true
-    }
-
     Text { text: "[ "; color: root.accentColor; font { family: root.fontName; pixelSize: root.fontSize } }
     Text { text: root.ipAddr.padStart(13, ' '); color: root.textColor; font { family: root.fontName; pixelSize: root.fontSize } }
     Text { text: " ]"; color: root.accentColor; font { family: root.fontName; pixelSize: root.fontSize } }

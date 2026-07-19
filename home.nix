@@ -25,7 +25,20 @@
 		vesktop
 		obs-studio
 		libreoffice
-		# proprietary garbage
+		
+		# nvim stuff
+		nixd
+		lua-language-server
+		texlab
+		clang-tools 
+		bash-language-server
+		
+		#languages
+		(julia.withPackages [
+		    "LanguageServer"
+		    "SymbolServer"
+		])
+# proprietary garbage
 	];
 
 	programs.bash={

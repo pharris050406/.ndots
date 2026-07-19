@@ -15,9 +15,16 @@ RowLayout {
     property string volIcon: "󰕾"
 
     spacing: 0
+    
+    Timer {
+        id: debounceTimer
+        interval: 15 // Wait 15ms to see if more scroll events come in
+        repeat: false
+        onTriggered: getVolProc.running = true
+    }
 
     function updateVolume() {
-        getVolProc.running = true
+        debounceTimer.restart()
     }
 
     Process {
