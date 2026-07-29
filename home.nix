@@ -25,7 +25,9 @@
 		vesktop
 		obs-studio
 		libreoffice
-		
+
+		vlc
+
 		# nvim stuff
 		nixd
 		lua-language-server
@@ -48,6 +50,7 @@
 			vim = "nvim";
 			yz = "yazi";
 			nrs = "sudo nixos-rebuild switch --flake ~/.ndots";
+			ncd = "cd ${config.home.homeDirectory}/.ndots";
 			src = "source ~/.ndots/config/bash/.bash_aliases";
 		};
 		initExtra = ''
