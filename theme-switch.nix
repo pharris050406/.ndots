@@ -4,8 +4,6 @@ let
   inherit (themesData) themes;
   themeNames = builtins.attrNames themes;
 
-  # One `name) VAR="val" ...;;` case arm per theme, generated from themes.nix
-  # so the palette data only ever lives in one place.
   caseArm = name: t: ''
     ${name})
       BG="${t.bg}"; BG_PANEL="${t.bgPanel}"; FG="${t.fg}"; MUTED="${t.muted}"
@@ -17,11 +15,11 @@ let
   '';
 
   caseArms = lib.concatStrings (lib.mapAttrsToList caseArm themes);
-  themeList = lib.concatStringsSep "\n" themeNames;
+  themeListString = lib.concatStringsSep "\n" themeNames;
 in
 pkgs.writeShellApplication {
   name = "theme-switch";
-  runtimeInputs = with pkgs; [ wmenu mako sway gawk ];
+  runtimeInputs = with pkgs; [ wmenu mako sway gawk gettext ];
   text = ''
     set -euo pipefail
 
@@ -33,84 +31,103 @@ pkgs.writeShellApplication {
     HISTORY_FILE="$HOME/.local/state/theme-history"
     GTK3_CSS="$HOME/.config/gtk-3.0/gtk.css"
     GTK4_CSS="$HOME/.config/gtk-4.0/gtk.css"
+    RMPC_TEMPLATE="$HOME/.ndots/config/rmpc/theme.ron.template"
+    RMPC_THEME="$HOME/.config/rmpc/themes/ndots.ron"
+
     render() {
       mkdir -p "$(dirname "$MAKO_CONF")" "$(dirname "$SWAY_THEME_CONF")" \
-		"$(dirname "$QS_THEME_JSON")" "$(dirname "$COLORS_ENV")" \
-		"$(dirname "$STATE_FILE")" "$(dirname "$HISTORY_FILE")" \
-		"$(dirname "$GTK3_CSS")" "$(dirname "$GTK4_CSS")"
-cat > "$MAKO_CONF" <<EOF
-font=$FONT $UI_FONT_SIZE
-background-color=$BG
-text-color=$FG
-border-color=$FG
-border-size=2
-default-timeout=5000
+               "$(dirname "$QS_THEME_JSON")" "$(dirname "$COLORS_ENV")" \
+               "$(dirname "$STATE_FILE")" "$(dirname "$HISTORY_FILE")" \
+               "$(dirname "$GTK3_CSS")" "$(dirname "$GTK4_CSS")" \
+               "$(dirname "$RMPC_THEME")"
 
-[urgency=high]
-border-color=$RED
-EOF
+      cat > "$MAKO_CONF" <<EOF
+    font=$FONT $UI_FONT_SIZE
+    background-color=$BG
+    text-color=$FG
+    border-color=$FG
+    border-size=2
+    default-timeout=5000
 
-cat > "$SWAY_THEME_CONF" <<EOF
-set \$thm_bg $BG
-set \$thm_fg $FG
-set \$thm_blue $BLUE
+    [urgency=high]
+    border-color=$RED
+    EOF
 
-set \$menu wmenu-run \\
--f "$FONT $UI_FONT_SIZE" \\
--N "''${BG#\#}" \\
--n "''${FG#\#}" \\
--S "''${FG#\#}" \\
--s "''${BG#\#}"
-EOF
+      cat > "$SWAY_THEME_CONF" <<EOF
+    set \$thm_bg $BG
+    set \$thm_fg $FG
+    set \$thm_blue $BLUE
 
-# Write a JSON file to the cache directory instead of a QML file
-cat > "$QS_THEME_JSON" <<EOF
-{
-"bg": "$BG_PANEL",
-"fg": "$FG",
-"muted": "$MUTED",
-"blue": "$BLUE",
-"cyan": "$CYAN",
-"green": "$GREEN",
-"yellow": "$YELLOW",
-"orange": "$ORANGE",
-"red": "$RED",
-"purple": "$PURPLE",
-"barColor": "$BAR_COLOR",
-"barOpacity": $BAR_OPACITY,
-"font": "$FONT",
-"fontSize": $BAR_FONT_SIZE
-}
-EOF
+    set \$menu wmenu-run \
+        -f "$FONT $UI_FONT_SIZE" \
+        -N "''${BG#\#}" \
+        -n "''${FG#\#}" \
+        -S "''${FG#\#}" \
+        -s "''${BG#\#}"
+    EOF
 
-cat > "$COLORS_ENV" <<EOF
-export THM_BG="''${BG#\#}"
-export THM_FG="''${FG#\#}"
-export THM_BLUE="''${BLUE#\#}"
-export THM_FONT="$FONT"
-export THM_FONT_SIZE="$UI_FONT_SIZE"
-EOF
+      cat > "$QS_THEME_JSON" <<EOF
+    {
+        "bg": "$BG_PANEL",
+        "fg": "$FG",
+        "muted": "$MUTED",
+        "blue": "$BLUE",
+        "cyan": "$CYAN",
+        "green": "$GREEN",
+        "yellow": "$YELLOW",
+        "orange": "$ORANGE",
+        "red": "$RED",
+        "purple": "$PURPLE",
+        "barColor": "$BAR_COLOR",
+        "barOpacity": $BAR_OPACITY,
+        "font": "$FONT",
+        "fontSize": $BAR_FONT_SIZE
+    }
+    EOF
+
+      cat > "$COLORS_ENV" <<EOF
+    export THM_BG="''${BG#\#}"
+    export THM_FG="''${FG#\#}"
+    export THM_BLUE="''${BLUE#\#}"
+    export THM_FONT="$FONT"
+    export THM_FONT_SIZE="$UI_FONT_SIZE"
+    EOF
     
-# GTK3 color overrides
-cat > "$GTK3_CSS" <<EOF
-@define-color theme_bg_color $BG;
-@define-color theme_fg_color $FG;
-@define-color theme_selected_bg_color $BLUE;
-@define-color theme_selected_fg_color $BG;
-@define-color theme_base_color $BG_PANEL;
-@define-color theme_text_color $FG;
-EOF
+      cat > "$GTK3_CSS" <<EOF
+    @define-color theme_bg_color $BG;
+    @define-color theme_fg_color $FG;
+    @define-color theme_selected_bg_color $BLUE;
+    @define-color theme_selected_fg_color $BG;
+    @define-color theme_base_color $BG_PANEL;
+    @define-color theme_text_color $FG;
+    EOF
 
-# GTK4 / Libadwaita color overrides
-cat > "$GTK4_CSS" <<EOF
-@define-color window_bg_color $BG;
-@define-color window_fg_color $FG;
-@define-color view_bg_color $BG_PANEL;
-@define-color view_fg_color $FG;
-@define-color accent_bg_color $BLUE;
-@define-color accent_fg_color $BG;
-@define-color accent_color $BLUE;
-EOF
+      cat > "$GTK4_CSS" <<EOF
+    @define-color window_bg_color $BG;
+    @define-color window_fg_color $FG;
+    @define-color view_bg_color $BG_PANEL;
+    @define-color view_fg_color $FG;
+    @define-color accent_bg_color $BLUE;
+    @define-color accent_fg_color $BG;
+    @define-color accent_color $BLUE;
+    EOF
+
+      if [ -f "$RMPC_TEMPLATE" ]; then
+        export THM_BG="#''${BG: -6}"
+        export THM_BG_PANEL="#''${BG_PANEL: -6}"
+        export THM_FG="#''${FG: -6}"
+        export THM_MUTED="#''${MUTED: -6}"
+        export THM_BLUE="#''${BLUE: -6}"
+        export THM_CYAN="#''${CYAN: -6}"
+        export THM_GREEN="#''${GREEN: -6}"
+        export THM_YELLOW="#''${YELLOW: -6}"
+        export THM_ORANGE="#''${ORANGE: -6}"
+        export THM_RED="#''${RED: -6}"
+        export THM_PURPLE="#''${PURPLE: -6}"
+
+        # shellcheck disable=SC2016
+        envsubst '$THM_BG $THM_BG_PANEL $THM_FG $THM_MUTED $THM_BLUE $THM_CYAN $THM_GREEN $THM_YELLOW $THM_ORANGE $THM_RED $THM_PURPLE' < "$RMPC_TEMPLATE" > "$RMPC_THEME"
+      fi
 
       echo "$THEME_NAME" > "$STATE_FILE"
 
@@ -135,7 +152,7 @@ EOF
       local hist_file="$HISTORY_FILE"
       [ -f "$hist_file" ] || hist_file="/dev/null"
 
-      gawk -v themes='${themeList}' '
+      gawk -v themes='${themeListString}' '
         BEGIN {
           n = split(themes, valid_arr, "\n");
           for (i = 1; i <= n; i++) {
