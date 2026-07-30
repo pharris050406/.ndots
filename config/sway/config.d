@@ -1,1 +1,0 @@
-/nix/store/b1kb5j2gqpcy8zfxyjkk2lp73g98zw6r-home-manager-files/.config/sway/config.d
