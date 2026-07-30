@@ -22,7 +22,7 @@ SELECTION=$(
       }
     }'
   } | awk '!seen[$0]++' | wmenu -i -p "Search Music:" \
-      -f "JetBrainsMono Nerd Font 11" \
+      -f "JetBrainsMono Nerd Font 10" \
       -N "#000000" \
       -n "#ffffff" \
       -S "#00d700" \

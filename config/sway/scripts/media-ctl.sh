@@ -12,12 +12,10 @@ if [ "${#PLAYERS[@]}" -eq 0 ]; then
     exit 1
 fi
 
-# Resolve the active player
 INDEX=-1
 PLAYER=""
 
 if [ -n "$SAVED" ]; then
-    # Try exact match
     for i in "${!PLAYERS[@]}"; do
         if [ "${PLAYERS[$i]}" == "$SAVED" ]; then
             INDEX=$i
@@ -26,7 +24,6 @@ if [ -n "$SAVED" ]; then
         fi
     done
 
-    # Try base match (fixes changing instance IDs)
     if [ "$INDEX" -eq -1 ]; then
         BASE_SAVED="${SAVED%%.*}"
         for i in "${!PLAYERS[@]}"; do
@@ -41,21 +38,29 @@ if [ -n "$SAVED" ]; then
 fi
 
 if [ "$1" == "cycle" ]; then
-    # Cycle Logic
     NEXT_PLAYER="${PLAYERS[$(( (INDEX + 1) % ${#PLAYERS[@]} ))]}"
     echo "$NEXT_PLAYER" > "$STATE_FILE"
     notify-send -t 1500 "Media Focus" "Now controlling: $NEXT_PLAYER"
     
-    # Pkill your Quickshell sleep watchdog here to update instantly
     pkill -P "$(pgrep -f "media-source.sh" | head -n 1)" sleep 2>/dev/null || true
 else
-    # Control Logic
     [ -z "$PLAYER" ] && PLAYER="${PLAYERS[0]}" && echo "$PLAYER" > "$STATE_FILE"
     
-    # Send the action (play-pause, next, previous) to the player
-    playerctl --player="$PLAYER" "$1"
+    if [ "$1" == "previous" ]; then
+        POS=$(playerctl --player="$PLAYER" position 2>/dev/null || echo "0")
+        
+        POS_INT=${POS%.*}
+        
+        if [ "${POS_INT:-0}" -gt 10 ]; then
+            # If past 10 seconds, restart the current track
+            playerctl --player="$PLAYER" position 0
+        else
+            playerctl --player="$PLAYER" previous
+        fi
+    else
+        playerctl --player="$PLAYER" "$1"
+    fi
     
-    # Wake up the background daemon instantly!
     pkill -P "$(pgrep -f "media-source.sh" | head -n 1)" sleep 2>/dev/null || true
     
     sleep 0.01
