@@ -51,7 +51,7 @@ else
         
         POS_INT=${POS%.*}
         
-        if [ "${POS_INT:-0}" -gt 10 ]; then
+        if [ "${POS_INT:-0}" -gt 5 ]; then
             # If past 10 seconds, restart the current track
             playerctl --player="$PLAYER" position 0
         else
