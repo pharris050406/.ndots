@@ -21,6 +21,7 @@ set $term foot
 
 
 bindsym $mod+m exec ~/.ndots/config/sway/scripts/music-menu.sh
+bindsym $mod+shift+t exec theme-switch
 
 ### Output configuration
 #

@@ -1,6 +1,8 @@
 {config, pkgs, lib, inputs, ...}:
 let
-    theme = import ./theme.nix;
+    themesData = import ./themes.nix;
+    theme = themesData.themes.${themesData.default};
+    themeSwitch = import ./theme-switch.nix { inherit pkgs lib themesData; };
 in
 {
 	home.username="p";
@@ -27,10 +29,11 @@ in
 		vesktop
 		obs-studio
 		libreoffice
-		
+		mako
 		swaybg
 		wmenu
-
+		themeSwitch
+		    
 		vlc
 
 		# nvim stuff
@@ -177,74 +180,15 @@ xdg.configFile."sway/config" = {
         recursive = true;
     };
 
-	xdg.configFile."sway/theme.conf".text=''
-	    set $thm_bg ${theme.bg}
-	    set $thm_fg ${theme.fg}
-	    set $thm_blue ${theme.blue}
-
-	    set $menu wmenu-run \
-	    -f "${theme.font} ${toString theme.uiFontSize}" \
-	    -N ${lib.removePrefix "#" theme.bg} \
-	    -n ${lib.removePrefix "#" theme.fg} \
-	    -S ${lib.removePrefix "#" theme.fg} \
-	    -s ${lib.removePrefix "#" theme.bg}
-	'';
-	xdg.configFile."quickshell/shell.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/shell.qml";
-	xdg.configFile."quickshell/BluetoothWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/BluetoothWidget.qml";
-	xdg.configFile."quickshell/ClockWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/ClockWidget.qml";
-	xdg.configFile."quickshell/CpuWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/CpuWidget.qml";
-	xdg.configFile."quickshell/IpWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/IpWidget.qml";
-	xdg.configFile."quickshell/MemWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/MemWidget.qml";
-	xdg.configFile."quickshell/MusicWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/MusicWidget.qml";
-	xdg.configFile."quickshell/VolumeWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/VolumeWidget.qml";
-	xdg.configFile."quickshell/WorkspaceWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/WorkspaceWidget.qml";
-
-	xdg.configFile."quickshell/Theme.qml".text = ''
-	    import QtQuick
-
-	    QtObject {
-	        property color colBg: "${theme.bgPanel}"
-	        property color colFg: "${theme.fg}"
-	        property color colMuted: "${theme.muted}"
-	        property color colBlue: "${theme.blue}"
-	        property color colCyan: "${theme.cyan}"
-	        property color colGreen: "${theme.green}"
-	        property color colYellow: "${theme.yellow}"
-	        property color colOrange: "${theme.orange}"
-	        property color colRed: "${theme.red}"
-	        property color colPurple: "${theme.purple}"
-
-	        property color barColor: "${theme.barColor}"
-	        property real barOpacity: ${toString theme.barOpacity}
-
-	        property string fontFamily: "${theme.font}"
-	        property int fontSize: ${toString theme.barFontSize}
-	    }
-	'';
-
+    xdg.configFile."quickshell" = {
+	source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell";
+	recursive = true;
+    };
 	xdg.configFile."rmpc"={
 	    source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/rmpc";
 	    recursive = true;
 	};
 
-
-	services.mako={
-	    enable = true;  
-	    settings = {
-		font = "${theme.font} ${toString theme.uiFontSize}";
-
-		background-color = theme.bg;
-		text-color = theme.fg;
-		border-color = theme.fg;
-
-		border-size = 2;
-		default-timeout = 5000;
-
-		"urgency=high" = {
-		  border-color = theme.red;
-		};
-	    };
-	};
 
 	services.mpd-mpris={
 	    enable = true;
@@ -293,4 +237,14 @@ xdg.configFile."sway/config" = {
 			"Session\\InterfaceAddress" = "";
 		};
 	};
+
+	# Applies the declared default theme the first time this config is activated
+	# on a machine (so a fresh install always has a working theme). If you've
+	# already picked a theme with `theme-switch`, later rebuilds leave it alone.
+	home.activation.applyDefaultTheme = lib.hm.dag.entryAfter ["writeBoundary"] ''
+		STATE_FILE="$HOME/.local/state/ndots-theme"
+		if [ ! -f "$STATE_FILE" ]; then
+			$DRY_RUN_CMD ${themeSwitch}/bin/theme-switch ${themesData.default}
+		fi
+	'';
 }

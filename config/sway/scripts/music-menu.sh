@@ -3,6 +3,12 @@
 command -v wmenu >/dev/null || { echo "wmenu not found"; exit 1; }
 command -v mpc >/dev/null || { echo "mpc not found"; exit 1; }
 
+# theme-switch rewrites this file at runtime; session env vars are only correct
+# until the first switch, since a running shell never re-reads its login env.
+COLORS_ENV="$HOME/.cache/theme-colors.sh"
+# shellcheck source=/dev/null
+[ -f "$COLORS_ENV" ] && . "$COLORS_ENV"
+
 HISTFILE="$HOME/.cache/wmenu-music-history"
 touch "$HISTFILE" 2>/dev/null
 
