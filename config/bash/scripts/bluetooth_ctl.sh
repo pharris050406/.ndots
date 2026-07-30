@@ -9,7 +9,7 @@ RED='\033[0;31m'
 RESET='\033[0m'
 
 # Local device database
-BTCTL_DB="$HOME/.btctl_devices"
+BTCTL_DB="$HOME/.bb_devices"
 
 # Associative arrays to track devices and their RSSI
 declare -A seen_devices
@@ -108,21 +108,21 @@ clear_cache() {
 }
 
 usage() {
-    printf "${CYAN}btctl${RESET} - bluetooth control\n\n"
+    printf "${CYAN}bb${RESET} - bluetooth control\n\n"
     printf "Usage:\n"
-    printf "  btctl -s [duration] [name]   scan for devices\n"
-    printf "  btctl -c <name>              connect to a device\n"
-    printf "  btctl -d <name>              disconnect from a device\n"
-    printf "  btctl -r <name>              remove/unpair a device\n"
-    printf "  btctl -l                     list paired devices\n\n"
+    printf "  bb -s [duration] [name]   scan for devices\n"
+    printf "  bb -c <name>              connect to a device\n"
+    printf "  bb -d <name>              disconnect from a device\n"
+    printf "  bb -r <name>              remove/unpair a device\n"
+    printf "  bb -l                     list paired devices\n\n"
     printf "Examples:\n"
-    printf "  btctl -s\n"
-    printf "  btctl -s 10\n"
-    printf "  btctl -s earbuds\n"
-    printf "  btctl -s 10 earbuds\n"
-    printf "  btctl -c earbuds\n"
-    printf "  btctl -d earbuds\n"
-    printf "  btctl -r earbuds\n"
+    printf "  bb -s\n"
+    printf "  bb -s 10\n"
+    printf "  bb -s earbuds\n"
+    printf "  bb -s 10 earbuds\n"
+    printf "  bb -c earbuds\n"
+    printf "  bb -d earbuds\n"
+    printf "  bb -r earbuds\n"
 }
 
 # Find MAC by name — checks local db first, then bluetoothctl
