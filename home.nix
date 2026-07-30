@@ -21,7 +21,7 @@
 		quickshell
 		alsa-utils	
 		yt-dlp
-		
+		spotdl
 		vesktop
 		obs-studio
 		libreoffice
@@ -40,7 +40,8 @@
 		    "LanguageServer"
 		    "SymbolServer"
 		])
-# proprietary garbage
+		# proprietary garbage
+
 	];
 
 	programs.bash={
@@ -65,6 +66,10 @@
 		   fi
 		'';
 	};
+
+	home.sessionPath = [
+		"${config.home.homeDirectory}/.ndots/config/bash/scripts"
+	];
 
 	programs.foot={
 	    enable = true;

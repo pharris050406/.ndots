@@ -1,0 +1,104 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [ -z "${1:-}" ]; then
+    echo "Usage: dlmusic [-p] <URL>"
+    exit 1
+fi
+
+MUSIC_DIR="$HOME/Music"
+PLAYLIST_DIR="$MUSIC_DIR/Playlists"
+PLAYLIST_FLAG=false
+URL=""
+
+# Parse args
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -p) PLAYLIST_FLAG=true; shift ;;
+        *)  URL="$1"; shift ;;
+    esac
+done
+
+mkdir -p "$PLAYLIST_DIR"
+pushd "$MUSIC_DIR" > /dev/null || exit 1
+
+# ==========================================
+# SPOTIFY URL HANDLING (Using spotdl)
+# ==========================================
+if [[ "$URL" == *"spotify.com"* ]]; then
+    echo "Spotify link detected. Utilizing spotdl..."
+    
+    SPOTDL_OUTPUT=$(mktemp)
+    
+    SPOTDL_ARGS=(
+        "--format" "mp3"
+        "--output" "{artist}/{album}/{title}.{output-ext}"
+    )
+    
+    if $PLAYLIST_FLAG; then
+        SPOTDL_ARGS+=("--m3u" "$PLAYLIST_DIR/{list}.m3u")
+    fi
+
+    spotdl download "$URL" "${SPOTDL_ARGS[@]}" | tee "$SPOTDL_OUTPUT"
+
+    # Extract embedded artwork into a separate cover.jpg file per album folder
+    find . -type f -name "*.mp3" | while read -r song; do
+        album_dir="$(dirname "$song")"
+        if [ ! -f "$album_dir/cover.jpg" ]; then
+            ffmpeg -y -i "$song" -an -vcodec copy "$album_dir/cover.jpg" >/dev/null 2>&1 || true
+        fi
+    done
+
+    # Rename spotdl's generated m3u file to the exact original Spotify playlist name
+    if $PLAYLIST_FLAG; then
+        PL_NAME=$(grep -oE "Found [0-9]+ songs in .+\(Playlist\)" "$SPOTDL_OUTPUT" | sed -E 's/Found [0-9]+ songs in (.*) \(Playlist\)/\1/' | tr -d '\r')
+        if [ -n "$PL_NAME" ]; then
+            # Linux allows colons, spaces, carets, and brackets. Only replace forward slashes if any exist.
+            CLEAN_PL_NAME=$(echo "$PL_NAME" | tr '/' '-')
+            TARGET_M3U="$PLAYLIST_DIR/$CLEAN_PL_NAME.m3u"
+            
+            # Find the most recently created .m3u file in the playlist directory
+            LATEST_M3U=$(ls -t "$PLAYLIST_DIR"/*.m3u 2>/dev/null | head -n 1)
+            if [ -n "$LATEST_M3U" ] && [ "$LATEST_M3U" != "$TARGET_M3U" ]; then
+                mv "$LATEST_M3U" "$TARGET_M3U"
+                echo "Renamed playlist file to exact name: $CLEAN_PL_NAME.m3u"
+            fi
+        fi
+    fi
+    rm -f "$SPOTDL_OUTPUT"
+
+# ==========================================
+# STANDARD URL HANDLING (Using yt-dlp)
+# ==========================================
+else
+    echo "Standard link detected. Utilizing yt-dlp..."
+    
+    PLAYLIST_ARGS=()
+    if $PLAYLIST_FLAG; then
+        PLAYLIST_ARGS+=(
+            --exec "f=%(filename)q; printf '../%s\n' \"\${f%.*}.mp3\" >> \"$PLAYLIST_DIR/%(playlist_title|Unknown)s.m3u\""
+        )
+    fi
+
+    yt-dlp -x \
+        --audio-format mp3 \
+        --audio-quality 0 \
+        --embed-metadata \
+        --convert-thumbnails jpg \
+        --ppa "ThumbnailsConvertor:-vf crop=ih:ih" \
+        --ppa "ffmpeg:-id3v2_version 3" \
+        --output-na-placeholder "Unknown" \
+        --add-metadata \
+        --replace-in-metadata "artist" "(?i)(?: feat\.?| ft\.?| &| with| and|,) .*" "" \
+        --replace-in-metadata "uploader" "(?i)(?: - Topic| feat\.?| ft\.?| &| with| and|,) .*" "" \
+        -o "%(artist,uploader|Unknown)s/%(album,playlist_title|Unknown)s/%(title)s.%(ext)s" \
+        --no-overwrites \
+        --write-thumbnail \
+        -o "thumbnail:%(artist,uploader|Unknown)s/%(album,playlist_title|Unknown)s/cover.%(ext)s" \
+        --exec "f=%(filepath)q; rm -f \"\${f%.*}.jpg\"" \
+        "${PLAYLIST_ARGS[@]}" \
+        "$URL"
+fi
+
+popd > /dev/null
+mpc update
