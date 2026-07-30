@@ -1,5 +1,8 @@
-{config, pkgs, lib, inputs, ...}:{
-
+{config, pkgs, lib, inputs, ...}:
+let
+    theme = import ./theme.nix;
+in
+{
 	home.username="p";
 	home.homeDirectory="/home/p";
 	programs.git.enable=true;
@@ -17,7 +20,6 @@
 		qbittorrent
 		ffmpeg
 		autotiling
-		waybar
 		quickshell
 		alsa-utils	
 		yt-dlp
@@ -25,6 +27,9 @@
 		vesktop
 		obs-studio
 		libreoffice
+		
+		swaybg
+		wmenu
 
 		vlc
 
@@ -46,30 +51,57 @@
 
 	programs.bash={
 		enable=true;
+		enableCompletion = true;
 		shellAliases = {
 			vi = "nvim";
 			vim = "nvim";
 			yz = "yazi";
 			nrs = "sudo nixos-rebuild switch --flake ~/.ndots";
 			ncd = "cd ${config.home.homeDirectory}/.ndots";
-			src = "source ~/.ndots/config/bash/.bash_aliases";
 		};
 		initExtra = ''
-		    if [ -f ~/.ndots/config/bash/.bash_aliases ]; then
-			source ~/.ndots/config/bash/.bash_aliases
-		    fi
-		'';
+		    bb() {
+		      ~/.config/bash/scripts/bluetooth_ctl.sh "$@"
+		    }
 
+		    _bb_complete() {
+		      local cur=''${COMP_WORDS[COMP_CWORD]}
+		      local prev=''${COMP_WORDS[COMP_CWORD-1]}
+
+		      if [[ $COMP_CWORD -eq 1 ]]; then
+			COMPREPLY=($(compgen -W "-s -c -d -r -l --scan --connect --disconnect --remove --list" -- "$cur"))
+			return
+		      fi
+
+		      if [[ "$prev" == "-c" || "$prev" == "-d" || "$prev" == "-r" || \
+			    "$prev" == "--connect" || "$prev" == "--disconnect" || "$prev" == "--remove" ]]; then
+			local IFS=$'\n'
+			while IFS= read -r name; do
+			  COMPREPLY+=("$name")
+			done < <(cat "$HOME/.btctl_devices" 2>/dev/null | cut -d' ' -f2- | sort -u | grep -i "^$cur")
+			return
+		      fi
+		    }
+
+		    complete -o filenames -F _bb_complete bb
+		  '';
 		profileExtra=''
 		   if [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
 			exec sway --unsupported-gpu
 		   fi
 		'';
-	};
-
+		};
 	home.sessionPath = [
 		"${config.home.homeDirectory}/.ndots/config/bash/scripts"
 	];
+	home.sessionVariables = {
+	    THM_BG = lib.removePrefix "#" theme.bg;
+	    THM_FG = lib.removePrefix "#" theme.fg;
+	    THM_BLUE = lib.removePrefix "#" theme.blue;
+
+	    THM_FONT = theme.font;
+	    THM_FONT_SIZE = toString theme.uiFontSize;
+	};
 
 	programs.foot={
 	    enable = true;
@@ -132,21 +164,64 @@
 		recursive = true;
 	};
 
-	xdg.configFile."sway"={
-	    source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/sway";
-	    recursive=true;
-	};
 
-	xdg.configFile."quickshell"={
-	    source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell";
-	    recursive = true;
-	};
+xdg.configFile."sway/config" = {
+        source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/sway/config";
+    };
+    xdg.configFile."sway/config.d" = {
+        source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/sway/config.d";
+        recursive = true;
+    };
+    xdg.configFile."sway/scripts" = {
+        source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/sway/scripts";
+        recursive = true;
+    };
 
-	xdg.configFile."waybar"={
-	    source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/waybar";
-	    recursive = true;
-	};
-	
+	xdg.configFile."sway/theme.conf".text=''
+	    set $thm_bg ${theme.bg}
+	    set $thm_fg ${theme.fg}
+	    set $thm_blue ${theme.blue}
+
+	    set $menu wmenu-run \
+	    -f "${theme.font} ${toString theme.uiFontSize}" \
+	    -N ${lib.removePrefix "#" theme.bg} \
+	    -n ${lib.removePrefix "#" theme.fg} \
+	    -S ${lib.removePrefix "#" theme.fg} \
+	    -s ${lib.removePrefix "#" theme.bg}
+	'';
+	xdg.configFile."quickshell/shell.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/shell.qml";
+	xdg.configFile."quickshell/BluetoothWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/BluetoothWidget.qml";
+	xdg.configFile."quickshell/ClockWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/ClockWidget.qml";
+	xdg.configFile."quickshell/CpuWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/CpuWidget.qml";
+	xdg.configFile."quickshell/IpWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/IpWidget.qml";
+	xdg.configFile."quickshell/MemWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/MemWidget.qml";
+	xdg.configFile."quickshell/MusicWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/MusicWidget.qml";
+	xdg.configFile."quickshell/VolumeWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/VolumeWidget.qml";
+	xdg.configFile."quickshell/WorkspaceWidget.qml".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell/WorkspaceWidget.qml";
+
+	xdg.configFile."quickshell/Theme.qml".text = ''
+	    import QtQuick
+
+	    QtObject {
+	        property color colBg: "${theme.bgPanel}"
+	        property color colFg: "${theme.fg}"
+	        property color colMuted: "${theme.muted}"
+	        property color colBlue: "${theme.blue}"
+	        property color colCyan: "${theme.cyan}"
+	        property color colGreen: "${theme.green}"
+	        property color colYellow: "${theme.yellow}"
+	        property color colOrange: "${theme.orange}"
+	        property color colRed: "${theme.red}"
+	        property color colPurple: "${theme.purple}"
+
+	        property color barColor: "${theme.barColor}"
+	        property real barOpacity: ${toString theme.barOpacity}
+
+	        property string fontFamily: "${theme.font}"
+	        property int fontSize: ${toString theme.barFontSize}
+	    }
+	'';
+
 	xdg.configFile."rmpc"={
 	    source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/rmpc";
 	    recursive = true;
@@ -155,6 +230,20 @@
 
 	services.mako={
 	    enable = true;  
+	    settings = {
+		font = "${theme.font} ${toString theme.uiFontSize}";
+
+		background-color = theme.bg;
+		text-color = theme.fg;
+		border-color = theme.fg;
+
+		border-size = 2;
+		default-timeout = 5000;
+
+		"urgency=high" = {
+		  border-color = theme.red;
+		};
+	    };
 	};
 
 	services.mpd-mpris={

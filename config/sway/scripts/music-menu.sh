@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-source "$HOME/.ndots/config/theme/colors.sh"
-
 command -v wmenu >/dev/null || { echo "wmenu not found"; exit 1; }
 command -v mpc >/dev/null || { echo "mpc not found"; exit 1; }
 
@@ -23,13 +21,7 @@ SELECTION=$(
         print "Track: " fname
       }
     }'
-  } | awk '!seen[$0]++' | wmenu -i -p "Search Music:" \
-      -f "$THM_FONT $THM_FONT_SIZE" \
-      -N "$THM_BG" \
-      -n "$THM_FG" \
-      -S "$THM_BLUE" \
-      -s "$THM_BG"
-)
+  } | awk '!seen[$0]++' | wmenu -f "$THM_FONT $THM_FONT_SIZE" -N "$THM_BG" -n "$THM_FG" -S "$THM_FG" -s "$THM_BG")
 
 [ -z "$SELECTION" ] && exit 0
 
