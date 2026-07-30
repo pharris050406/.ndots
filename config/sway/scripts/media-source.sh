@@ -4,7 +4,8 @@ STATE_FILE="$HOME/.cache/quickshell/selected-player"
 
 get_active_player() {
     local saved=$(cat "$STATE_FILE" 2>/dev/null)
-    local players=($(playerctl -l 2>/dev/null))
+    # Use timeout to prevent playerctl -l from hanging
+    local players=($(timeout 0.5 playerctl -l 2>/dev/null))
     
     if [ ${#players[@]} -eq 0 ]; then return; fi
     if [ -n "$saved" ]; then
@@ -25,6 +26,9 @@ get_active_player() {
 LAST_META=""
 PLAYER=""
 
+# Clean up any leftover processes on script start
+pkill -f "playerctl" 2>/dev/null || true
+
 while true; do
     read -r NEW_PLAYER < "$STATE_FILE" 2>/dev/null
     
@@ -43,12 +47,13 @@ while true; do
         continue
     fi
 
-    # 1. Fetch current status and metadata in ONE call
-    CURRENT_META=$(playerctl --player="$PLAYER" metadata --format "META|{{status}}|{{mpris:length}}|{{title}} - {{artist}}" 2>/dev/null)
+    # 1. Fetch current status and metadata in ONE call (with 0.5s timeout to kill hangs)
+    CURRENT_META=$(timeout 0.5 playerctl --player="$PLAYER" metadata --format "META|{{status}}|{{mpris:length}}|{{title}} - {{artist}}" 2>/dev/null)
     
-    # If player closed, errored, or returned an empty string
+    # If player closed, errored, timed out, or returned an empty string
     if [ -z "$CURRENT_META" ]; then
         PLAYER="" # Reset to find a new player next loop
+        sleep 1
         continue
     fi
 
@@ -58,14 +63,14 @@ while true; do
         LAST_META="$CURRENT_META"
     fi
 
-    # 3. Handle Position Tracking
+    # 3. Handle Position Tracking (with 0.3s timeout)
     STATUS=$(echo "$CURRENT_META" | cut -d'|' -f2)
     if [[ "$STATUS" == "Playing" || "$STATUS" == "Paused" ]]; then
         if [[ "$STATUS" == "Paused" && "$PLAYER" == firefox* ]]; then
-            POS=$(playerctl --player="$PLAYER" metadata mpris:position 2>/dev/null)
+            POS=$(timeout 0.3 playerctl --player="$PLAYER" metadata mpris:position 2>/dev/null)
             if [ -n "$POS" ]; then POS=$(awk "BEGIN {print $POS / 1000000}"); fi
         else
-            POS=$(playerctl --player="$PLAYER" position 2>/dev/null)
+            POS=$(timeout 0.3 playerctl --player="$PLAYER" position 2>/dev/null)
         fi
         echo "POS|$POS"
     fi

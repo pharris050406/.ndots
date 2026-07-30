@@ -15,16 +15,43 @@ RowLayout {
     property color barColor: "#1e1e1e" 
     property real barOpacity: 0.80
     
-    property string btState: "off" // "off", "on", "connected"
+    property string btState: "off"
     property string btDevice: ""
     
     spacing: 0
+
+    // Persistent State Handling
+    FileView {
+        id: stateFile
+        path: Quickshell.statePath("bluetoothWidgetState.json")
+        watchChanges: true
+        onFileChanged: reload()
+        onAdapterUpdated: writeAdapter()
+        JsonAdapter {
+            id: state
+            property bool isEnabled: false
+        }
+        Component.onCompleted: {
+            applyBootState.running = true;
+        }
+    }
+
+    // Force system to match saved JSON state on startup
+    Process {
+        id: applyBootState
+        command: [
+            "sh", "-c", 
+            state.isEnabled 
+            ? "bluetoothctl power on; (sleep 1; for mac in $(bluetoothctl devices Paired | awk '{print $2}'); do bluetoothctl connect $mac >/dev/null 2>&1; done) &" 
+            : "bluetoothctl power off"
+        ]
+    }
 
     Process {
         id: btProc
         command: [
             "sh", "-c",
-	    "while true; do " + 
+            "while true; do " + 
             "if ! bluetoothctl show 2>/dev/null | grep -q 'Powered: yes'; then " +
             "echo 'off'; " +
             "else " +
@@ -40,8 +67,8 @@ RowLayout {
             "echo \"connected|$DEV\"; " +
             "fi; " +
             "fi; " +
-	    "fi;" +
-	    "sleep 2; done" 
+            "fi;" +
+            "sleep 2; done" 
         ]
 
         stdout: SplitParser {
@@ -93,12 +120,16 @@ RowLayout {
             hoverEnabled: true 
             
             onClicked: {
+                // Update JSON file to reflect intended state
                 if (root.btState === "off") {
                     root.btState = "on";
+                    state.isEnabled = true; 
                 } else {
                     root.btState = "off";
                     root.btDevice = "";
+                    state.isEnabled = false; 
                 }
+                stateFile.writeAdapter(); 
                 
                 togglePower.running = true;
             }

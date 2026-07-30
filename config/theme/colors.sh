@@ -1,0 +1,5 @@
+export THM_BG="1a1b26"
+export THM_FG="ffffff"
+export THM_BLUE="ffffff"
+export THM_FONT="JetBrainsMono Nerd Font"
+export THM_FONT_SIZE="10"

@@ -127,7 +127,7 @@ RowLayout {
         Row {
             id: scrollingRow
             anchors.verticalCenter: parent.verticalCenter
-            spacing: 15
+            spacing: 0
 
             Text {
                 id: trackText1

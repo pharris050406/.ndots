@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source "$HOME/.ndots/config/theme/colors.sh"
+
 command -v wmenu >/dev/null || { echo "wmenu not found"; exit 1; }
 command -v mpc >/dev/null || { echo "mpc not found"; exit 1; }
 
@@ -22,12 +24,13 @@ SELECTION=$(
       }
     }'
   } | awk '!seen[$0]++' | wmenu -i -p "Search Music:" \
-      -f "JetBrainsMono Nerd Font 10" \
-      -N "#000000" \
-      -n "#ffffff" \
-      -S "#00d700" \
-      -s "#000000"
+      -f "$THM_FONT $THM_FONT_SIZE" \
+      -N "$THM_BG" \
+      -n "$THM_FG" \
+      -S "$THM_BLUE" \
+      -s "$THM_BG"
 )
+
 [ -z "$SELECTION" ] && exit 0
 
 grep -v -F -x "$SELECTION" "$HISTFILE" > "$HISTFILE.tmp" 2>/dev/null
