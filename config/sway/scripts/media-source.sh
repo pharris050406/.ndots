@@ -22,53 +22,54 @@ get_active_player() {
     echo "${players[0]}" | tee "$STATE_FILE"
 }
 
+LAST_META=""
+PLAYER=""
+
 while true; do
-    PLAYER=$(get_active_player)
+    read -r NEW_PLAYER < "$STATE_FILE" 2>/dev/null
+    
+    # If player changed (like pressing F8), force a fresh update
+    if [ "$NEW_PLAYER" != "$PLAYER" ]; then
+        PLAYER=$(get_active_player)
+        LAST_META=""
+    fi
 
     if [ -z "$PLAYER" ]; then
-        echo "META|Not Playing|0|Not Playing"
-        sleep 2
+        if [ "$LAST_META" != "META|Not Playing|0|Not Playing" ]; then
+            LAST_META="META|Not Playing|0|Not Playing"
+            echo "$LAST_META"
+        fi
+        sleep 1
         continue
     fi
 
-    playerctl --player="$PLAYER" metadata --format "META|{{status}}|{{mpris:length}}|{{title}} - {{artist}}" --follow 2>/dev/null &
-    META_PID=$!
-    CURRENT_TITLE=""
+    # 1. Fetch current status and metadata in ONE call
+    CURRENT_META=$(playerctl --player="$PLAYER" metadata --format "META|{{status}}|{{mpris:length}}|{{title}} - {{artist}}" 2>/dev/null)
+    
+    # If player closed, errored, or returned an empty string
+    if [ -z "$CURRENT_META" ]; then
+        PLAYER="" # Reset to find a new player next loop
+        continue
+    fi
 
-    # The Watchdog Loop
-    while kill -0 $META_PID 2>/dev/null; do
-        # 1. Native bash read (0 forks instead of running playerctl -l)
-        read -r NEW_PLAYER < "$STATE_FILE"
-        if [ "$NEW_PLAYER" != "$PLAYER" ]; then
-            break 
+    # 2. Push META to Quickshell ONLY if it changed
+    if [ "$CURRENT_META" != "$LAST_META" ]; then
+        echo "$CURRENT_META"
+        LAST_META="$CURRENT_META"
+    fi
+
+    # 3. Handle Position Tracking
+    STATUS=$(echo "$CURRENT_META" | cut -d'|' -f2)
+    if [[ "$STATUS" == "Playing" || "$STATUS" == "Paused" ]]; then
+        if [[ "$STATUS" == "Paused" && "$PLAYER" == firefox* ]]; then
+            POS=$(playerctl --player="$PLAYER" metadata mpris:position 2>/dev/null)
+            if [ -n "$POS" ]; then POS=$(awk "BEGIN {print $POS / 1000000}"); fi
+        else
+            POS=$(playerctl --player="$PLAYER" position 2>/dev/null)
         fi
+        echo "POS|$POS"
+    fi
 
-        # 2. Get Title and Status in one single process call
-        RAW_DATA=$(playerctl --player="$PLAYER" metadata --format "{{status}}|{{title}}" 2>/dev/null)
-        if [ -z "$RAW_DATA" ]; then break; fi # Player closed
-        
-        IFS='|' read -r STATUS ACTUAL_TITLE <<< "$RAW_DATA"
-
-        if [ -n "$CURRENT_TITLE" ] && [ "$ACTUAL_TITLE" != "$CURRENT_TITLE" ]; then
-            playerctl --player="$PLAYER" metadata --format "META|{{status}}|{{mpris:length}}|{{title}} - {{artist}}" 2>/dev/null
-            break 
-        fi
-        CURRENT_TITLE="$ACTUAL_TITLE"
-
-        # 3. Position logic
-        if [[ "$STATUS" == "Playing" || "$STATUS" == "Paused" ]]; then
-            if [[ "$STATUS" == "Paused" && "$PLAYER" == firefox* ]]; then
-                POS=$(playerctl --player="$PLAYER" metadata mpris:position 2>/dev/null)
-                if [ -n "$POS" ]; then POS=$(awk "BEGIN {print $POS / 1000000}"); fi
-            else
-                POS=$(playerctl --player="$PLAYER" position 2>/dev/null)
-            fi
-            echo "POS|$POS"
-        fi
-        
-        sleep 1
-    done
-
-    kill $META_PID 2>/dev/null
-    wait $META_PID 2>/dev/null
+    # Wait 1 second (interrupted instantly if F8 is pressed)
+    sleep 1
 done
