@@ -33,9 +33,8 @@ in
 		swaybg
 		wmenu
 		themeSwitch
-		    
+				    
 		vlc
-
 		# nvim stuff
 		nixd
 		lua-language-server

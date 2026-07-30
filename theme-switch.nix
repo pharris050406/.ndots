@@ -31,64 +31,86 @@ pkgs.writeShellApplication {
     COLORS_ENV="$HOME/.cache/theme-colors.sh"
     STATE_FILE="$HOME/.local/state/ndots-theme"
     HISTORY_FILE="$HOME/.local/state/theme-history"
-
+    GTK3_CSS="$HOME/.config/gtk-3.0/gtk.css"
+    GTK4_CSS="$HOME/.config/gtk-4.0/gtk.css"
     render() {
       mkdir -p "$(dirname "$MAKO_CONF")" "$(dirname "$SWAY_THEME_CONF")" \
-               "$(dirname "$QS_THEME_JSON")" "$(dirname "$COLORS_ENV")" \
-               "$(dirname "$STATE_FILE")" "$(dirname "$HISTORY_FILE")"
+		"$(dirname "$QS_THEME_JSON")" "$(dirname "$COLORS_ENV")" \
+		"$(dirname "$STATE_FILE")" "$(dirname "$HISTORY_FILE")" \
+		"$(dirname "$GTK3_CSS")" "$(dirname "$GTK4_CSS")"
+cat > "$MAKO_CONF" <<EOF
+font=$FONT $UI_FONT_SIZE
+background-color=$BG
+text-color=$FG
+border-color=$FG
+border-size=2
+default-timeout=5000
 
-      cat > "$MAKO_CONF" <<EOF
-    font=$FONT $UI_FONT_SIZE
-    background-color=$BG
-    text-color=$FG
-    border-color=$FG
-    border-size=2
-    default-timeout=5000
+[urgency=high]
+border-color=$RED
+EOF
 
-    [urgency=high]
-    border-color=$RED
-    EOF
+cat > "$SWAY_THEME_CONF" <<EOF
+set \$thm_bg $BG
+set \$thm_fg $FG
+set \$thm_blue $BLUE
 
-      cat > "$SWAY_THEME_CONF" <<EOF
-    set \$thm_bg $BG
-    set \$thm_fg $FG
-    set \$thm_blue $BLUE
+set \$menu wmenu-run \\
+-f "$FONT $UI_FONT_SIZE" \\
+-N "''${BG#\#}" \\
+-n "''${FG#\#}" \\
+-S "''${FG#\#}" \\
+-s "''${BG#\#}"
+EOF
 
-    set \$menu wmenu-run \\
-        -f "$FONT $UI_FONT_SIZE" \\
-        -N "''${BG#\#}" \\
-        -n "''${FG#\#}" \\
-        -S "''${FG#\#}" \\
-        -s "''${BG#\#}"
-    EOF
+# Write a JSON file to the cache directory instead of a QML file
+cat > "$QS_THEME_JSON" <<EOF
+{
+"bg": "$BG_PANEL",
+"fg": "$FG",
+"muted": "$MUTED",
+"blue": "$BLUE",
+"cyan": "$CYAN",
+"green": "$GREEN",
+"yellow": "$YELLOW",
+"orange": "$ORANGE",
+"red": "$RED",
+"purple": "$PURPLE",
+"barColor": "$BAR_COLOR",
+"barOpacity": $BAR_OPACITY,
+"font": "$FONT",
+"fontSize": $BAR_FONT_SIZE
+}
+EOF
 
-      # Write a JSON file to the cache directory instead of a QML file
-      cat > "$QS_THEME_JSON" <<EOF
-    {
-        "bg": "$BG_PANEL",
-        "fg": "$FG",
-        "muted": "$MUTED",
-        "blue": "$BLUE",
-        "cyan": "$CYAN",
-        "green": "$GREEN",
-        "yellow": "$YELLOW",
-        "orange": "$ORANGE",
-        "red": "$RED",
-        "purple": "$PURPLE",
-        "barColor": "$BAR_COLOR",
-        "barOpacity": $BAR_OPACITY,
-        "font": "$FONT",
-        "fontSize": $BAR_FONT_SIZE
-    }
-    EOF
+cat > "$COLORS_ENV" <<EOF
+export THM_BG="''${BG#\#}"
+export THM_FG="''${FG#\#}"
+export THM_BLUE="''${BLUE#\#}"
+export THM_FONT="$FONT"
+export THM_FONT_SIZE="$UI_FONT_SIZE"
+EOF
+    
+# GTK3 color overrides
+cat > "$GTK3_CSS" <<EOF
+@define-color theme_bg_color $BG;
+@define-color theme_fg_color $FG;
+@define-color theme_selected_bg_color $BLUE;
+@define-color theme_selected_fg_color $BG;
+@define-color theme_base_color $BG_PANEL;
+@define-color theme_text_color $FG;
+EOF
 
-      cat > "$COLORS_ENV" <<EOF
-    export THM_BG="''${BG#\#}"
-    export THM_FG="''${FG#\#}"
-    export THM_BLUE="''${BLUE#\#}"
-    export THM_FONT="$FONT"
-    export THM_FONT_SIZE="$UI_FONT_SIZE"
-    EOF
+# GTK4 / Libadwaita color overrides
+cat > "$GTK4_CSS" <<EOF
+@define-color window_bg_color $BG;
+@define-color window_fg_color $FG;
+@define-color view_bg_color $BG_PANEL;
+@define-color view_fg_color $FG;
+@define-color accent_bg_color $BLUE;
+@define-color accent_fg_color $BG;
+@define-color accent_color $BLUE;
+EOF
 
       echo "$THEME_NAME" > "$STATE_FILE"
 
