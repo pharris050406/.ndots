@@ -21,7 +21,7 @@ let
 in
 pkgs.writeShellApplication {
   name = "theme-switch";
-  runtimeInputs = with pkgs; [ wmenu mako sway ];
+  runtimeInputs = with pkgs; [ wmenu mako sway gawk ];
   text = ''
     set -euo pipefail
 
@@ -30,10 +30,12 @@ pkgs.writeShellApplication {
     QS_THEME_JSON="$HOME/.cache/theme-colors.json"
     COLORS_ENV="$HOME/.cache/theme-colors.sh"
     STATE_FILE="$HOME/.local/state/ndots-theme"
+    HISTORY_FILE="$HOME/.local/state/theme-history"
 
     render() {
       mkdir -p "$(dirname "$MAKO_CONF")" "$(dirname "$SWAY_THEME_CONF")" \
-               "$(dirname "$QS_THEME_JSON")" "$(dirname "$COLORS_ENV")" "$(dirname "$STATE_FILE")"
+               "$(dirname "$QS_THEME_JSON")" "$(dirname "$COLORS_ENV")" \
+               "$(dirname "$STATE_FILE")" "$(dirname "$HISTORY_FILE")"
 
       cat > "$MAKO_CONF" <<EOF
     font=$FONT $UI_FONT_SIZE
@@ -88,11 +90,52 @@ pkgs.writeShellApplication {
     export THM_FONT_SIZE="$UI_FONT_SIZE"
     EOF
 
-    echo "$THEME_NAME" > "$STATE_FILE"
+      echo "$THEME_NAME" > "$STATE_FILE"
 
-    makoctl reload >/dev/null 2>&1 || true
-    swaymsg reload >/dev/null 2>&1 || true
-    
+      makoctl reload >/dev/null 2>&1 || true
+      swaymsg reload >/dev/null 2>&1 || true
+    }
+
+    record_history() {
+      local theme="$1"
+      mkdir -p "$(dirname "$HISTORY_FILE")"
+      if [ -f "$HISTORY_FILE" ]; then
+        local tmp
+        tmp=$(mktemp)
+        { echo "$theme"; grep -v -x "$theme" "$HISTORY_FILE" || true; } > "$tmp"
+        mv "$tmp" "$HISTORY_FILE"
+      else
+        echo "$theme" > "$HISTORY_FILE"
+      fi
+    }
+
+    get_ordered_themes() {
+      local hist_file="$HISTORY_FILE"
+      [ -f "$hist_file" ] || hist_file="/dev/null"
+
+      gawk -v themes='${themeList}' '
+        BEGIN {
+          n = split(themes, valid_arr, "\n");
+          for (i = 1; i <= n; i++) {
+            if (valid_arr[i] != "") valid[valid_arr[i]] = 1;
+          }
+        }
+        {
+          if ($0 in valid && !seen[$0]) {
+            print $0;
+            seen[$0] = 1;
+          }
+        }
+        END {
+          for (i = 1; i <= n; i++) {
+            t = valid_arr[i];
+            if (t != "" && !seen[t]) {
+              print t;
+              seen[t] = 1;
+            }
+          }
+        }
+      ' "$hist_file"
     }
 
     apply_theme() {
@@ -105,11 +148,12 @@ pkgs.writeShellApplication {
           exit 1
           ;;
       esac
+      record_history "$THEME_NAME"
       render
     }
 
     if [ "''${1:-}" = "--list" ]; then
-      printf '%s\n' ${lib.concatMapStringsSep " " (n: "\"${n}\"") themeNames}
+      get_ordered_themes
       exit 0
     fi
 
@@ -118,7 +162,7 @@ pkgs.writeShellApplication {
     else
       # shellcheck source=/dev/null
       [ -f "$COLORS_ENV" ] && . "$COLORS_ENV"
-      CHOICE=$(printf '${themeList}\n' | wmenu -p "Theme:" \
+      CHOICE=$(get_ordered_themes | wmenu -p "Theme:" \
           -f "''${THM_FONT:-monospace} ''${THM_FONT_SIZE:-10}" \
           -N "''${THM_BG:-1a1b26}" \
           -n "''${THM_FG:-ffffff}" \
