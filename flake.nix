@@ -23,7 +23,6 @@
 						useGlobalPkgs=true;
 						useUserPackages=true;
 						users.p = import ./home.nix;
-						backupFileExtension="backup";
 					};
 				}
 			];
@@ -41,7 +40,6 @@
 						useGlobalPkgs=true;
 						useUserPackages=true;
 						users.p = import ./home.nix;
-						backupFileExtension="backup";
 					};
 				}
 			];

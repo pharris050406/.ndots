@@ -35,6 +35,7 @@ in
 		themeSwitch
 				    
 		vlc
+		acpi
 		# nvim stuff
 		nixd
 		lua-language-server
@@ -183,11 +184,7 @@ xdg.configFile."sway/config" = {
 	source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/quickshell";
 	recursive = true;
     };
-	xdg.configFile."rmpc"={
-	    source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/rmpc";
-	    recursive = true;
-	};
-
+	xdg.configFile."rmpc/config.ron".source = config.lib.file.mkOutOfStoreSymlink "/home/p/.ndots/config/rmpc/config.ron";
 
 	services.mpd-mpris={
 	    enable = true;

@@ -1,6 +1,7 @@
 import Quickshell
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Io
 
 PanelWindow {
     id: root
@@ -13,6 +14,17 @@ PanelWindow {
     anchors.right: true
     implicitHeight: 25
     color: theme.colBg
+
+    property bool hasBattery: false
+
+    Process {
+        id: batteryCheck
+        command: ["sh", "-c", "test -e /sys/class/power_supply/BAT0 -o -e /sys/class/power_supply/BAT1 && echo yes || echo no"]
+        running: true
+        stdout: SplitParser {
+            onRead: data => root.hasBattery = data.trim() === "yes"
+        }
+    }
 
     RowLayout {
         anchors.fill: parent
@@ -28,7 +40,7 @@ PanelWindow {
         }
 
         Item { Layout.fillWidth: true }
-        
+
         MusicWidget {
             property int widget_width: 325
             Layout.preferredWidth: widget_width 
@@ -39,7 +51,7 @@ PanelWindow {
             fontName: theme.fontFamily
             fontSize: theme.fontSize
         }
-        
+
         BluetoothWidget {
             Layout.fillHeight: true
             accentColor: theme.colBlue
@@ -49,7 +61,7 @@ PanelWindow {
             fontName: theme.fontFamily
             fontSize: theme.fontSize
         }
-        
+
         VolumeWidget {
             Layout.fillHeight: true
             accentColor: theme.colYellow
@@ -57,7 +69,7 @@ PanelWindow {
             fontName: theme.fontFamily
             fontSize: theme.fontSize
         }
-        
+
         IpWidget {
             Layout.fillHeight: true
             accentColor: theme.colGreen
@@ -67,7 +79,7 @@ PanelWindow {
             fontName: theme.fontFamily
             fontSize: theme.fontSize
         }
-        
+
         MemWidget {
             Layout.fillHeight: true
             accentColor: theme.colPurple
@@ -75,7 +87,7 @@ PanelWindow {
             fontName: theme.fontFamily
             fontSize: theme.fontSize
         }        
-        
+
         CpuWidget {
             Layout.fillHeight: true
             accentColor: theme.colOrange
@@ -83,7 +95,22 @@ PanelWindow {
             fontName: theme.fontFamily
             fontSize: theme.fontSize
         }
-        
+
+        Loader {
+            id: batteryLoader
+            Layout.fillHeight: true
+            active: root.hasBattery
+            visible: active // Prevents ghost spacing in RowLayout when inactive
+            source: "BatteryWidget.qml"
+
+            Binding { target: batteryLoader.item; property: "accentColor"; value: theme.colGreen; when: batteryLoader.status === Loader.Ready }
+            Binding { target: batteryLoader.item; property: "textColor"; value: theme.colFg; when: batteryLoader.status === Loader.Ready }
+            Binding { target: batteryLoader.item; property: "barColor"; value: theme.barColor; when: batteryLoader.status === Loader.Ready }
+            Binding { target: batteryLoader.item; property: "barOpacity"; value: theme.barOpacity; when: batteryLoader.status === Loader.Ready }
+            Binding { target: batteryLoader.item; property: "fontName"; value: theme.fontFamily; when: batteryLoader.status === Loader.Ready }
+            Binding { target: batteryLoader.item; property: "fontSize"; value: theme.fontSize; when: batteryLoader.status === Loader.Ready }
+        }
+
         ClockWidget {
             Layout.fillHeight: true
             accentColor: theme.colMuted
