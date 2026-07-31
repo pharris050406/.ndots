@@ -429,5 +429,96 @@ synthwave84 = {
   barColor = "#34294f";
   barOpacity = 0.90;
 };
+abyss = {
+  # bioluminescent deep sea — near-black water, glowing plankton accents
+  background = "#04080d";
+  backgroundPanel = "#cc04080d";
+  foreground = "#d4f1f9";
+  muted = "#3a5a66";
+
+  accent2 = "#00d9ff";
+  accent1 = "#00ffb3";
+  accent3 = "#5fffa8";
+  accent4 = "#ffe86b";
+  accent5 = "#ff8f5e";
+  accent6 = "#ff4d6a";
+  accent7 = "#a06bff";
+
+  font = "JetBrainsMono Nerd Font";
+  uiFontSize = 10;
+  barFontSize = 13;
+
+  barColor = "#0a1218";
+  barOpacity = 0.90;
+};
+
+wildberry = {
+  # deep wine and berry tones, moody and rich
+  background = "#1c0f1a";
+  backgroundPanel = "#cc1c0f1a";
+  foreground = "#f3e3ee";
+  muted = "#7a5a72";
+
+  accent2 = "#c65daa";
+  accent1 = "#e0719c";
+  accent3 = "#9fce6b";
+  accent4 = "#e8c15c";
+  accent5 = "#e07a4f";
+  accent6 = "#d1425f";
+  accent7 = "#9a5ce0";
+
+  font = "JetBrainsMono Nerd Font";
+  uiFontSize = 10;
+  barFontSize = 13;
+
+  barColor = "#2b1826";
+  barOpacity = 0.90;
+};
+
+copperfield = {
+  # warm copper, rust, and burnt sienna — autumn foundry vibes
+  background = "#1f1712";
+  backgroundPanel = "#cc1f1712";
+  foreground = "#f2e4d3";
+  muted = "#8a7159";
+
+  accent2 = "#c98a4b";
+  accent1 = "#d9a86c";
+  accent3 = "#9caf5a";
+  accent4 = "#e0a83e";
+  accent5 = "#cc5f2e";
+  accent6 = "#b8452f";
+  accent7 = "#a06a8f";
+
+  font = "JetBrainsMono Nerd Font";
+  uiFontSize = 10;
+  barFontSize = 13;
+
+  barColor = "#2c2119";
+  barOpacity = 0.90;
+};
+
+glacier = {
+  # cool icy light theme — crisp whites and glacial blues
+  background = "#eef5f7";
+  backgroundPanel = "#e6eef5f7";
+  foreground = "#132b33";
+  muted = "#5f7d85";
+
+  accent2 = "#0e7c9e";
+  accent1 = "#1aa39a";
+  accent3 = "#4c8f4a";
+  accent4 = "#b8860b";
+  accent5 = "#c2622f";
+  accent6 = "#c23b3b";
+  accent7 = "#7a5ba6";
+
+  font = "JetBrainsMono Nerd Font";
+  uiFontSize = 10;
+  barFontSize = 13;
+
+  barColor = "#dbe9ed";
+  barOpacity = 0.95;
+};
   };
 }
