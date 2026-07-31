@@ -106,11 +106,14 @@ security.rtkit.enable = true;  # recommended alongside pipewire, not screenshare
 	programs.nix-ld.enable = true;
 	programs.git ={
 		enable = true;
+
 		config ={
+		user = {
+		  name = "p";
+		  email = "p.harris050406@gmail.com";
+		};
 			safe ={
 			directory = "${config.users.users.p.home}/.ndots";
-			userEmail = "p.harris050406@gmail.com";
-			userName = "p";
 			};
 		};
 	};
