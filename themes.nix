@@ -133,27 +133,6 @@
       barOpacity = 0.85;
     };
 
-    cyberpunk = {
-      background = "#0d0e15";
-      backgroundPanel = "#800d0e15";
-      foreground = "#c0caf5";
-      muted = "#414868";
-
-      accent2 = "#00e5ff";
-      accent1 = "#00ffcc";
-      accent3 = "#00ff66";
-      accent4 = "#ffea00";
-      accent5 = "#ff6600";
-      accent6 = "#ff003c";
-      accent7 = "#b026ff";
-
-      font = "JetBrainsMono Nerd Font";
-      uiFontSize = 10;
-      barFontSize = 13;
-
-      barColor = "#1a1c29";
-      barOpacity = 0.85;
-    };
     e_ink_light = {
       background = "#ffffff";
       backgroundPanel = "#e6ffffff"; 
