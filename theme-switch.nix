@@ -6,9 +6,9 @@ let
 
   caseArm = name: t: ''
     ${name})
-      BG="${t.bg}"; BG_PANEL="${t.bgPanel}"; FG="${t.fg}"; MUTED="${t.muted}"
-      BLUE="${t.blue}"; CYAN="${t.cyan}"; GREEN="${t.green}"; YELLOW="${t.yellow}"
-      ORANGE="${t.orange}"; RED="${t.red}"; PURPLE="${t.purple}"
+      BACKGROUND="${t.background}"; BACKGROUND_PANEL="${t.backgroundPanel}"; FOREGROUND="${t.foreground}"; MUTED="${t.muted}"
+      ACCENT1="${t.accent1}"; ACCENT2="${t.accent2}"; ACCENT3="${t.accent3}"; ACCENT4="${t.accent4}"
+      ACCENT5="${t.accent5}"; ACCENT6="${t.accent6}"; ACCENT7="${t.accent7}"
       FONT="${t.font}"; UI_FONT_SIZE="${toString t.uiFontSize}"; BAR_FONT_SIZE="${toString t.barFontSize}"
       BAR_COLOR="${t.barColor}"; BAR_OPACITY="${toString t.barOpacity}"
       ;;
@@ -43,41 +43,41 @@ pkgs.writeShellApplication {
 
       cat > "$MAKO_CONF" <<EOF
     font=$FONT $UI_FONT_SIZE
-    background-color=$BG
-    text-color=$FG
-    border-color=$FG
+    background-color=$BACKGROUND
+    text-color=$FOREGROUND
+    border-color=$FOREGROUND
     border-size=2
     default-timeout=5000
 
     [urgency=high]
-    border-color=$RED
+    border-color=$ACCENT6
     EOF
 
       cat > "$SWAY_THEME_CONF" <<EOF
-    set \$thm_bg $BG
-    set \$thm_fg $FG
-    set \$thm_blue $BLUE
+    set \$thm_bg $BACKGROUND
+    set \$thm_fg $FOREGROUND
+    set \$thm_blue $ACCENT2
 
     set \$menu wmenu-run \
         -f "$FONT $UI_FONT_SIZE" \
-        -N "''${BG#\#}" \
-        -n "''${FG#\#}" \
-        -S "''${FG#\#}" \
-        -s "''${BG#\#}"
+        -N "''${BACKGROUND#\#}" \
+        -n "''${FOREGROUND#\#}" \
+        -S "''${FOREGROUND#\#}" \
+        -s "''${BACKGROUND#\#}"
     EOF
 
       cat > "$QS_THEME_JSON" <<EOF
     {
-        "bg": "$BG_PANEL",
-        "fg": "$FG",
+        "background": "$BACKGROUND_PANEL",
+        "foreground": "$FOREGROUND",
         "muted": "$MUTED",
-        "blue": "$BLUE",
-        "cyan": "$CYAN",
-        "green": "$GREEN",
-        "yellow": "$YELLOW",
-        "orange": "$ORANGE",
-        "red": "$RED",
-        "purple": "$PURPLE",
+        "accent1": "$ACCENT1",
+        "accent2": "$ACCENT2",
+        "accent3": "$ACCENT3",
+        "accent4": "$ACCENT4",
+        "accent5": "$ACCENT5",
+        "accent6": "$ACCENT6",
+        "accent7": "$ACCENT7",
         "barColor": "$BAR_COLOR",
         "barOpacity": $BAR_OPACITY,
         "font": "$FONT",
@@ -86,49 +86,32 @@ pkgs.writeShellApplication {
     EOF
 
       cat > "$COLORS_ENV" <<EOF
-    export THM_BG="''${BG#\#}"
-    export THM_FG="''${FG#\#}"
-    export THM_BLUE="''${BLUE#\#}"
+    export THM_BG="''${BACKGROUND#\#}"
+    export THM_FG="''${FOREGROUND#\#}"
+    export THM_BLUE="''${ACCENT2#\#}"
     export THM_FONT="$FONT"
     export THM_FONT_SIZE="$UI_FONT_SIZE"
     EOF
-    
-      cat > "$GTK3_CSS" <<EOF
-    @define-color theme_bg_color $BG;
-    @define-color theme_fg_color $FG;
-    @define-color theme_selected_bg_color $BLUE;
-    @define-color theme_selected_fg_color $BG;
-    @define-color theme_base_color $BG_PANEL;
-    @define-color theme_text_color $FG;
-    EOF
-
-      cat > "$GTK4_CSS" <<EOF
-    @define-color window_bg_color $BG;
-    @define-color window_fg_color $FG;
-    @define-color view_bg_color $BG_PANEL;
-    @define-color view_fg_color $FG;
-    @define-color accent_bg_color $BLUE;
-    @define-color accent_fg_color $BG;
-    @define-color accent_color $BLUE;
-    EOF
 
       if [ -f "$RMPC_TEMPLATE" ]; then
-        export THM_BG="#''${BG: -6}"
-        export THM_BG_PANEL="#''${BG_PANEL: -6}"
-        export THM_FG="#''${FG: -6}"
+        export THM_BG="#''${BACKGROUND: -6}"
+        export THM_BG_PANEL="#''${BACKGROUND_PANEL: -6}"
+        export THM_FG="#''${FOREGROUND: -6}"
         export THM_MUTED="#''${MUTED: -6}"
-        export THM_BLUE="#''${BLUE: -6}"
-        export THM_CYAN="#''${CYAN: -6}"
-        export THM_GREEN="#''${GREEN: -6}"
-        export THM_YELLOW="#''${YELLOW: -6}"
-        export THM_ORANGE="#''${ORANGE: -6}"
-        export THM_RED="#''${RED: -6}"
-        export THM_PURPLE="#''${PURPLE: -6}"
+        # NOTE: rmpc's template wants named colors, but the theme data only
+        # has ACCENT1..7. This mapping is a guess (ACCENT2=blue is confirmed
+        # elsewhere in this script) -- verify against your actual theme data.
+        export THM_CYAN="#''${ACCENT1: -6}"
+        export THM_BLUE="#''${ACCENT2: -6}"
+        export THM_GREEN="#''${ACCENT3: -6}"
+        export THM_YELLOW="#''${ACCENT4: -6}"
+        export THM_ORANGE="#''${ACCENT5: -6}"
+        export THM_RED="#''${ACCENT6: -6}"
+        export THM_PURPLE="#''${ACCENT7: -6}"
 
         # shellcheck disable=SC2016
         envsubst '$THM_BG $THM_BG_PANEL $THM_FG $THM_MUTED $THM_BLUE $THM_CYAN $THM_GREEN $THM_YELLOW $THM_ORANGE $THM_RED $THM_PURPLE' < "$RMPC_TEMPLATE" > "$RMPC_THEME"
       fi
-
       echo "$THEME_NAME" > "$STATE_FILE"
 
       makoctl reload >/dev/null 2>&1 || true

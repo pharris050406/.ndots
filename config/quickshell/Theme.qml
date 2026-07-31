@@ -5,16 +5,16 @@ Item {
     id: root
 
     // Fallback default values
-    property color colBg: "#181825"
-    property color colFg: "#cdd6f4"
-    property color colMuted: "#585b70"
-    property color colBlue: "#8caaee"
-    property color colCyan: "#81c8be"
-    property color colGreen: "#a6d189"
-    property color colYellow: "#e5c890"
-    property color colOrange: "#ef9f76"
-    property color colRed: "#e78284"
-    property color colPurple: "#ca9ee6"
+    property color background: "#181825"
+    property color foreground: "#cdd6f4"
+    property color muted: "#585b70"
+    property color accent1: "#81c8be"
+    property color accent2: "#8caaee"
+    property color accent3: "#a6d189"
+    property color accent4: "#e5c890"
+    property color accent5: "#ef9f76"
+    property color accent6: "#e78284"
+    property color accent7: "#ca9ee6"
 
     property color barColor: "#181825"
     property real barOpacity: 0.85
@@ -38,16 +38,16 @@ Item {
             
             try {
                 let theme = JSON.parse(dataString);
-                root.colBg = theme.bg;
-                root.colFg = theme.fg;
-                root.colMuted = theme.muted;
-                root.colBlue = theme.blue;
-                root.colCyan = theme.cyan;
-                root.colGreen = theme.green;
-                root.colYellow = theme.yellow;
-                root.colOrange = theme.orange;
-                root.colRed = theme.red;
-                root.colPurple = theme.purple;
+                root.background = theme.background;
+                root.foreground = theme.foreground;
+                root.muted = theme.muted;
+                root.accent1 = theme.accent1;
+                root.accent2 = theme.accent2;
+                root.accent3 = theme.accent3;
+                root.accent4 = theme.accent4;
+                root.accent5 = theme.accent5;
+                root.accent6 = theme.accent6;
+                root.accent7 = theme.accent7;
                 root.barColor = theme.barColor;
                 root.barOpacity = theme.barOpacity;
                 root.fontFamily = theme.font;

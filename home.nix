@@ -98,9 +98,9 @@ in
 		"${config.home.homeDirectory}/.ndots/config/bash/scripts"
 	];
 	home.sessionVariables = {
-	    THM_BG = lib.removePrefix "#" theme.bg;
-	    THM_FG = lib.removePrefix "#" theme.fg;
-	    THM_BLUE = lib.removePrefix "#" theme.blue;
+	    THM_BG = lib.removePrefix "#" theme.background;
+	    THM_FG = lib.removePrefix "#" theme.foreground;
+	    THM_BLUE = lib.removePrefix "#" theme.accent2;
 
 	    THM_FONT = theme.font;
 	    THM_FONT_SIZE = toString theme.uiFontSize;

@@ -3,18 +3,18 @@
 
   themes = {
     tokyonight = {
-      bg = "#1a1b26";
-      bgPanel = "#80000000";
-      fg = "#ffffff";
+      background = "#1a1b26";
+      backgroundPanel = "#80000000";
+      foreground = "#ffffff";
       muted = "#565f89";
 
-      blue = "#7aa2f7";
-      cyan = "#00f7ff";
-      green = "#40eb34";
-      yellow = "#e0af68";
-      orange = "#ff8000";
-      red = "#f7768e";
-      purple = "#c800ff";
+      accent2 = "#7aa2f7";
+      accent1 = "#00f7ff";
+      accent3 = "#40eb34";
+      accent4 = "#e0af68";
+      accent5 = "#ff8000";
+      accent6 = "#f7768e";
+      accent7 = "#c800ff";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -25,18 +25,18 @@
     };
 
     nord = {
-      bg = "#2e3440";
-      bgPanel = "#802e3440";
-      fg = "#eceff4";
+      background = "#2e3440";
+      backgroundPanel = "#802e3440";
+      foreground = "#eceff4";
       muted = "#4c566a";
 
-      blue = "#88c0d0";
-      cyan = "#8fbcbb";
-      green = "#a3be8c";
-      yellow = "#ebcb8b";
-      orange = "#d08770";
-      red = "#bf616a";
-      purple = "#b48ead";
+      accent2 = "#88c0d0";
+      accent1 = "#8fbcbb";
+      accent3 = "#a3be8c";
+      accent4 = "#ebcb8b";
+      accent5 = "#d08770";
+      accent6 = "#bf616a";
+      accent7 = "#b48ead";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -47,18 +47,18 @@
     };
 
     catppuccin = {
-      bg = "#1e1e2e";
-      bgPanel = "#801e1e2e";
-      fg = "#cdd6f4";
+      background = "#1e1e2e";
+      backgroundPanel = "#801e1e2e";
+      foreground = "#cdd6f4";
       muted = "#585b70";
 
-      blue = "#8caaee";
-      cyan = "#81c8be";
-      green = "#a6d189";
-      yellow = "#e5c890";
-      orange = "#ef9f76";
-      red = "#e78284";
-      purple = "#ca9ee6";
+      accent2 = "#8caaee";
+      accent1 = "#81c8be";
+      accent3 = "#a6d189";
+      accent4 = "#e5c890";
+      accent5 = "#ef9f76";
+      accent6 = "#e78284";
+      accent7 = "#ca9ee6";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -68,18 +68,18 @@
       barOpacity = 0.85;
     };
     gruvbox = {
-      bg = "#282828";
-      bgPanel = "#80282828";
-      fg = "#ebdbb2";
+      background = "#282828";
+      backgroundPanel = "#80282828";
+      foreground = "#ebdbb2";
       muted = "#928374";
 
-      blue = "#83a598";
-      cyan = "#8ec07c";
-      green = "#b8bb26";
-      yellow = "#fabd2f";
-      orange = "#fe8019";
-      red = "#fb4934";
-      purple = "#d3869b";
+      accent2 = "#83a598";
+      accent1 = "#8ec07c";
+      accent3 = "#b8bb26";
+      accent4 = "#fabd2f";
+      accent5 = "#fe8019";
+      accent6 = "#fb4934";
+      accent7 = "#d3869b";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -90,18 +90,18 @@
     };
 
     dracula = {
-      bg = "#282a36";
-      bgPanel = "#80282a36";
-      fg = "#f8f8f2";
+      background = "#282a36";
+      backgroundPanel = "#80282a36";
+      foreground = "#f8f8f2";
       muted = "#6272a4";
 
-      blue = "#8be9fd";
-      cyan = "#8be9fd";
-      green = "#50fa7b";
-      yellow = "#f1fa8c";
-      orange = "#ffb86c";
-      red = "#ff5555";
-      purple = "#bd93f9";
+      accent2 = "#8be9fd";
+      accent1 = "#8be9fd";
+      accent3 = "#50fa7b";
+      accent4 = "#f1fa8c";
+      accent5 = "#ffb86c";
+      accent6 = "#ff5555";
+      accent7 = "#bd93f9";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -112,18 +112,18 @@
     };
 
     solarized = {
-      bg = "#002b36";
-      bgPanel = "#80002b36";
-      fg = "#839496";
+      background = "#002b36";
+      backgroundPanel = "#80002b36";
+      foreground = "#839496";
       muted = "#586e75";
 
-      blue = "#268bd2";
-      cyan = "#2aa198";
-      green = "#859900";
-      yellow = "#b58900";
-      orange = "#cb4b16";
-      red = "#dc322f";
-      purple = "#d33682";
+      accent2 = "#268bd2";
+      accent1 = "#2aa198";
+      accent3 = "#859900";
+      accent4 = "#b58900";
+      accent5 = "#cb4b16";
+      accent6 = "#dc322f";
+      accent7 = "#d33682";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -134,18 +134,18 @@
     };
 
     cyberpunk = {
-      bg = "#0d0e15";
-      bgPanel = "#800d0e15";
-      fg = "#c0caf5";
+      background = "#0d0e15";
+      backgroundPanel = "#800d0e15";
+      foreground = "#c0caf5";
       muted = "#414868";
 
-      blue = "#00e5ff";
-      cyan = "#00ffcc";
-      green = "#00ff66";
-      yellow = "#ffea00";
-      orange = "#ff6600";
-      red = "#ff003c";
-      purple = "#b026ff";
+      accent2 = "#00e5ff";
+      accent1 = "#00ffcc";
+      accent3 = "#00ff66";
+      accent4 = "#ffea00";
+      accent5 = "#ff6600";
+      accent6 = "#ff003c";
+      accent7 = "#b026ff";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -155,18 +155,18 @@
       barOpacity = 0.85;
     };
     e_ink_light = {
-      bg = "#ffffff";
-      bgPanel = "#e6ffffff"; 
-      fg = "#000000"; 
+      background = "#ffffff";
+      backgroundPanel = "#e6ffffff"; 
+      foreground = "#000000"; 
       muted = "#666666";
 
-      blue = "#0055cc";
-      cyan = "#008888";
-      green = "#008800";
-      yellow = "#996600";
-      orange = "#cc5500";
-      red = "#dd0000";
-      purple = "#880088";
+      accent2 = "#0055cc";
+      accent1 = "#008888";
+      accent3 = "#008800";
+      accent4 = "#996600";
+      accent5 = "#cc5500";
+      accent6 = "#dd0000";
+      accent7 = "#880088";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -177,18 +177,18 @@
     };
 
     tokyonight_day_hc = {
-      bg = "#e1e2e7";
-      bgPanel = "#e6e1e2e7";
-      fg = "#111118"; # Deep, near-black blue instead of soft blue
+      background = "#e1e2e7";
+      backgroundPanel = "#e6e1e2e7";
+      foreground = "#111118"; # Deep, near-black blue instead of soft blue
       muted = "#6a739d";
 
-      blue = "#1e5cc2";
-      cyan = "#005c7a";
-      green = "#436821";
-      yellow = "#825d25";
-      orange = "#a14d00";
-      red = "#d11f54";
-      purple = "#7d31df";
+      accent2 = "#1e5cc2";
+      accent1 = "#005c7a";
+      accent3 = "#436821";
+      accent4 = "#825d25";
+      accent5 = "#a14d00";
+      accent6 = "#d11f54";
+      accent7 = "#7d31df";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -199,18 +199,18 @@
     };
 
     gruvbox_light_hc = {
-      bg = "#fbf1c7";
-      bgPanel = "#e6fbf1c7";
-      fg = "#1d2021"; # Hard dark contrast
+      background = "#fbf1c7";
+      backgroundPanel = "#e6fbf1c7";
+      foreground = "#1d2021"; # Hard dark contrast
       muted = "#7c6f64";
 
-      blue = "#076678";
-      cyan = "#427b58";
-      green = "#79740e";
-      yellow = "#b57614";
-      orange = "#af3a03";
-      red = "#9d0006";
-      purple = "#8f3f71";
+      accent2 = "#076678";
+      accent1 = "#427b58";
+      accent3 = "#79740e";
+      accent4 = "#b57614";
+      accent5 = "#af3a03";
+      accent6 = "#9d0006";
+      accent7 = "#8f3f71";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -220,18 +220,18 @@
       barOpacity = 0.95;
     };
     aurora = {
-      bg = "#0b1117";
-      bgPanel = "#cc0b1117";
-      fg = "#d9f6ff";
+      background = "#0b1117";
+      backgroundPanel = "#cc0b1117";
+      foreground = "#d9f6ff";
       muted = "#5f7b8c";
 
-      blue = "#3ddbd9";
-      cyan = "#3ddbd9";
-      green = "#7ce38b";
-      yellow = "#ffd866";
-      orange = "#ff9e64";
-      red = "#ff6b81";
-      purple = "#bb9af7";
+      accent2 = "#3ddbd9";
+      accent1 = "#3ddbd9";
+      accent3 = "#7ce38b";
+      accent4 = "#ffd866";
+      accent5 = "#ff9e64";
+      accent6 = "#ff6b81";
+      accent7 = "#bb9af7";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -241,18 +241,18 @@
       barOpacity = 0.90;
     };
     obsidian = {
-  bg = "#080808";
-  bgPanel = "#d9080808";
-  fg = "#f3f3f3";
+  background = "#080808";
+  backgroundPanel = "#d9080808";
+  foreground = "#f3f3f3";
   muted = "#666666";
 
-  blue = "#d0d0d0";
-  cyan = "#66d9ef";
-  green = "#89d185";
-  yellow = "#ffd75f";
-  orange = "#ff9955";
-  red = "#ff5f5f";
-  purple = "#af87ff";
+  accent2 = "#d0d0d0";
+  accent1 = "#66d9ef";
+  accent3 = "#89d185";
+  accent4 = "#ffd75f";
+  accent5 = "#ff9955";
+  accent6 = "#ff5f5f";
+  accent7 = "#af87ff";
 
   font = "JetBrainsMono Nerd Font";
   uiFontSize = 10;
@@ -262,18 +262,18 @@
   barOpacity = 0.92;
 };
 forest = {
-  bg = "#161d18";
-  bgPanel = "#cc161d18";
-  fg = "#e6efe7";
+  background = "#161d18";
+  backgroundPanel = "#cc161d18";
+  foreground = "#e6efe7";
   muted = "#708070";
 
-  blue = "#7ec16e";
-  cyan = "#5cbf9f";
-  green = "#7ec16e";
-  yellow = "#d9c76c";
-  orange = "#d48b4b";
-  red = "#d16d6d";
-  purple = "#9a86d6";
+  accent2 = "#7ec16e";
+  accent1 = "#5cbf9f";
+  accent3 = "#7ec16e";
+  accent4 = "#d9c76c";
+  accent5 = "#d48b4b";
+  accent6 = "#d16d6d";
+  accent7 = "#9a86d6";
 
   font = "JetBrainsMono Nerd Font";
   uiFontSize = 10;
@@ -283,18 +283,18 @@ forest = {
   barOpacity = 0.88;
 };
 sunset = {
-  bg = "#2b1f28";
-  bgPanel = "#cc2b1f28";
-  fg = "#fff2e8";
+  background = "#2b1f28";
+  backgroundPanel = "#cc2b1f28";
+  foreground = "#fff2e8";
   muted = "#aa8d8d";
 
-  blue = "#ff9f43";
-  cyan = "#67d7d0";
-  green = "#9bd16d";
-  yellow = "#ffd166";
-  orange = "#ff9f43";
-  red = "#ff5d73";
-  purple = "#d291ff";
+  accent2 = "#ff9f43";
+  accent1 = "#67d7d0";
+  accent3 = "#9bd16d";
+  accent4 = "#ffd166";
+  accent5 = "#ff9f43";
+  accent6 = "#ff5d73";
+  accent7 = "#d291ff";
 
   font = "JetBrainsMono Nerd Font";
   uiFontSize = 10;
@@ -304,18 +304,18 @@ sunset = {
   barOpacity = 0.90;
 };
 matrix = {
-  bg = "#020402";
-  bgPanel = "#d9020402";
-  fg = "#6eff6e";
+  background = "#020402";
+  backgroundPanel = "#d9020402";
+  foreground = "#6eff6e";
   muted = "#2f5f2f";
 
-  blue = "#6eff6e";
-  cyan = "#4fffc8";
-  green = "#6eff6e";
-  yellow = "#d0ff4f";
-  orange = "#ffa040";
-  red = "#ff5c5c";
-  purple = "#b266ff";
+  accent2 = "#6eff6e";
+  accent1 = "#4fffc8";
+  accent3 = "#6eff6e";
+  accent4 = "#d0ff4f";
+  accent5 = "#ffa040";
+  accent6 = "#ff5c5c";
+  accent7 = "#b266ff";
 
   font = "JetBrainsMono Nerd Font";
   uiFontSize = 10;
@@ -325,18 +325,18 @@ matrix = {
   barOpacity = 0.93;
 };
 rosepine = {
-  bg = "#191724";
-  bgPanel = "#cc191724";
-  fg = "#e0def4";
+  background = "#191724";
+  backgroundPanel = "#cc191724";
+  foreground = "#e0def4";
   muted = "#6e6a86";
 
-  blue = "#c4a7e7";
-  cyan = "#9ccfd8";
-  green = "#95b1ac";
-  yellow = "#f6c177";
-  orange = "#ebbcba";
-  red = "#eb6f92";
-  purple = "#c4a7e7";
+  accent2 = "#c4a7e7";
+  accent1 = "#9ccfd8";
+  accent3 = "#95b1ac";
+  accent4 = "#f6c177";
+  accent5 = "#ebbcba";
+  accent6 = "#eb6f92";
+  accent7 = "#c4a7e7";
 
   font = "JetBrainsMono Nerd Font";
   uiFontSize = 10;
@@ -346,18 +346,18 @@ rosepine = {
   barOpacity = 0.88;
 };
 paper = {
-  bg = "#f5f3ee";
-  bgPanel = "#edf5f3ee";
-  fg = "#202020";
+  background = "#f5f3ee";
+  backgroundPanel = "#edf5f3ee";
+  foreground = "#202020";
   muted = "#707070";
 
-  blue = "#202020";
-  cyan = "#2f8f9d";
-  green = "#4d7d42";
-  yellow = "#9a7a28";
-  orange = "#c05b20";
-  red = "#bb3f3f";
-  purple = "#7f5ab6";
+  accent2 = "#202020";
+  accent1 = "#2f8f9d";
+  accent3 = "#4d7d42";
+  accent4 = "#9a7a28";
+  accent5 = "#c05b20";
+  accent6 = "#bb3f3f";
+  accent7 = "#7f5ab6";
 
   font = "JetBrainsMono Nerd Font";
   uiFontSize = 10;
@@ -367,18 +367,18 @@ paper = {
   barOpacity = 0.96;
 };
 vaporwave = {
-  bg = "#18142a";
-  bgPanel = "#cc18142a";
-  fg = "#f5f0ff";
+  background = "#18142a";
+  backgroundPanel = "#cc18142a";
+  foreground = "#f5f0ff";
   muted = "#8c83b5";
 
-  blue = "#ff5ea8";
-  cyan = "#5cf2ff";
-  green = "#6dffb8";
-  yellow = "#ffe066";
-  orange = "#ffb347";
-  red = "#ff5ea8";
-  purple = "#d86bff";
+  accent2 = "#ff5ea8";
+  accent1 = "#5cf2ff";
+  accent3 = "#6dffb8";
+  accent4 = "#ffe066";
+  accent5 = "#ffb347";
+  accent6 = "#ff5ea8";
+  accent7 = "#d86bff";
 
   font = "JetBrainsMono Nerd Font";
   uiFontSize = 10;
@@ -388,18 +388,18 @@ vaporwave = {
   barOpacity = 0.90;
 };
 oled = {
-  bg = "#000000";
-  bgPanel = "#d9000000";
-  fg = "#ffffff";
+  background = "#000000";
+  backgroundPanel = "#d9000000";
+  foreground = "#ffffff";
   muted = "#555555";
 
-  blue = "#ffffff";
-  cyan = "#39d0d8";
-  green = "#3fb950";
-  yellow = "#f2cc60";
-  orange = "#ff9d57";
-  red = "#ff6b6b";
-  purple = "#bc8cff";
+  accent2 = "#ffffff";
+  accent1 = "#39d0d8";
+  accent3 = "#3fb950";
+  accent4 = "#f2cc60";
+  accent5 = "#ff9d57";
+  accent6 = "#ff6b6b";
+  accent7 = "#bc8cff";
 
   font = "JetBrainsMono Nerd Font";
   uiFontSize = 10;
@@ -409,18 +409,18 @@ oled = {
   barOpacity = 0.95;
 };
 synthwave84 = {
-  bg = "#241b2f";
-  bgPanel = "#cc241b2f";
-  fg = "#f8f8f2";
+  background = "#241b2f";
+  backgroundPanel = "#cc241b2f";
+  foreground = "#f8f8f2";
   muted = "#7b6c99";
 
-  blue = "#ff4d94";
-  cyan = "#72f1b8";
-  green = "#a1ff6b";
-  yellow = "#fede5d";
-  orange = "#ff8b39";
-  red = "#ff4d94";
-  purple = "#ff7edb";
+  accent2 = "#ff4d94";
+  accent1 = "#72f1b8";
+  accent3 = "#a1ff6b";
+  accent4 = "#fede5d";
+  accent5 = "#ff8b39";
+  accent6 = "#ff4d94";
+  accent7 = "#ff7edb";
 
   font = "JetBrainsMono Nerd Font";
   uiFontSize = 10;
