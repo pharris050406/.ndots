@@ -109,6 +109,8 @@ security.rtkit.enable = true;  # recommended alongside pipewire, not screenshare
 		config ={
 			safe ={
 			directory = "${config.users.users.p.home}/.ndots";
+			userEmail = "p.harris050406@gmail.com";
+			userName = "p";
 			};
 		};
 	};
