@@ -52,7 +52,7 @@ if [[ "$URL" == *"spotify.com"* ]]; then
         # Download songs AND write playlist in a SINGLE pass
         spotdl download "$URL" "${SPOTDL_FORMAT_ARGS[@]}" --m3u "Playlists/$TMP_M3U_NAME"
 
-	    if [ -f "Playlists/$TMP_M3U_NAME" ]; then
+        if [ -f "Playlists/$TMP_M3U_NAME" ]; then
             {
                 echo "#EXTM3U"
                 echo "#PLAYLIST:$PL_TITLE"
@@ -70,7 +70,6 @@ if [[ "$URL" == *"spotify.com"* ]]; then
     fi
 
     # Extract embedded artwork into cover.jpg, then strip it from the mp3 itself
-    # (ffmpeg refuses to edit files in-place, so we write to a temp file and swap it in)
     find . -mmin -15 -type f -name "*.mp3" | while read -r song; do
         album_dir="$(dirname "$song")"
         if [ ! -f "$album_dir/cover.jpg" ]; then
