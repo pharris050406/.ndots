@@ -58,21 +58,22 @@ while true; do
     fi
 
     # 2. Push META to Quickshell ONLY if it changed
+    META_CHANGED=false
     if [ "$CURRENT_META" != "$LAST_META" ]; then
         echo "$CURRENT_META"
         LAST_META="$CURRENT_META"
+        META_CHANGED=true
     fi
 
     # 3. Handle Position Tracking (with 0.3s timeout)
     STATUS=$(echo "$CURRENT_META" | cut -d'|' -f2)
-    if [[ "$STATUS" == "Playing" || "$STATUS" == "Paused" ]]; then
-        if [[ "$STATUS" == "Paused" && "$PLAYER" == firefox* ]]; then
-            POS=$(timeout 0.3 playerctl --player="$PLAYER" metadata mpris:position 2>/dev/null)
-            if [ -n "$POS" ]; then POS=$(awk "BEGIN {print $POS / 1000000}"); fi
-        else
-            POS=$(timeout 0.3 playerctl --player="$PLAYER" position 2>/dev/null)
+    
+    # Only push POS if Playing, OR if the metadata just changed (to sync initial pause state)
+    if [[ "$STATUS" == "Playing" ]] || [ "$META_CHANGED" = true ]; then
+        POS=$(timeout 0.3 playerctl --player="$PLAYER" position 2>/dev/null)
+        if [ -n "$POS" ]; then
+            echo "POS|${POS%.*}"
         fi
-        echo "POS|$POS"
     fi
 
     # Wait 1 second (interrupted instantly if F8 is pressed)
