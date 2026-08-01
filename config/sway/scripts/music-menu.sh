@@ -39,7 +39,7 @@ SELECTION=$(
   {
     cat "$HISTFILE"
     echo "$CURRENT_ITEMS"
-  } | awk 'NF && !seen[$0]++' | wmenu -f "$THM_FONT $THM_FONT_SIZE" -N "$THM_BG" -n "$THM_FG" -S "$THM_FG" -s "$THM_BG"
+  } | awk 'NF && !seen[$0]++' | wmenu -i -f "$THM_FONT $THM_FONT_SIZE" -N "$THM_BG" -n "$THM_FG" -S "$THM_FG" -s "$THM_BG"
 )
 
 [ -z "$SELECTION" ] && exit 0
