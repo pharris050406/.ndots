@@ -8,6 +8,7 @@ fi
 
 MUSIC_DIR="$HOME/Music"
 PLAYLIST_DIR="$MUSIC_DIR/Playlists"
+ANDROID_PL_DIR="$HOME/.android_playlists"
 PLAYLIST_FLAG=false
 URL=""
 
@@ -19,7 +20,7 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-mkdir -p "$PLAYLIST_DIR"
+mkdir -p "$PLAYLIST_DIR" "$ANDROID_PL_DIR"
 pushd "$MUSIC_DIR" > /dev/null || exit 1
 
 # ==========================================
@@ -43,26 +44,24 @@ if [[ "$URL" == *"spotify.com"* ]]; then
             
         PL_TITLE="${PL_TITLE:-Unknown}"
         
-        CLEAN_PL_TITLE=$(echo "$PL_TITLE" | tr '/' '-')
-        TARGET_M3U="$PLAYLIST_DIR/$CLEAN_PL_TITLE.m3u"
+        RAW_M3U="$PLAYLIST_DIR/$PL_TITLE.m3u"
+        CLEAN_PL_TITLE=$(echo "$PL_TITLE" | tr '/:*?"<>|\\' '-')
+        CLEAN_M3U="$ANDROID_PL_DIR/$CLEAN_PL_TITLE.m3u"
         TMP_M3U_NAME="temp-spotdl-$(date +%s).m3u"
-        
-        echo "Preserving internal playlist name: $PL_TITLE"
-        echo "Sanitized filename for disk: $CLEAN_PL_TITLE.m3u"
 
         # Download songs AND write playlist in a SINGLE pass
         spotdl download "$URL" "${SPOTDL_FORMAT_ARGS[@]}" --m3u "Playlists/$TMP_M3U_NAME"
 
-        # Inject #PLAYLIST header and save to sanitized filename
-        if [ -f "Playlists/$TMP_M3U_NAME" ]; then
+	    if [ -f "Playlists/$TMP_M3U_NAME" ]; then
             {
                 echo "#EXTM3U"
                 echo "#PLAYLIST:$PL_TITLE"
-                grep -v '^#EXTM3U' "Playlists/$TMP_M3U_NAME"
-            } > "$TARGET_M3U"
+                sed '/^#EXTM3U/d; /^#/! s|^|../|' "Playlists/$TMP_M3U_NAME"
+            } > "$RAW_M3U"
             
+            cp "$RAW_M3U" "$CLEAN_M3U"
             rm -f "Playlists/$TMP_M3U_NAME"
-            echo "Successfully created playlist: $CLEAN_PL_TITLE.m3u"
+            echo "Successfully created playlist: $PL_TITLE.m3u"
         else
             echo "Error: Failed to generate playlist file."
         fi
@@ -70,13 +69,14 @@ if [[ "$URL" == *"spotify.com"* ]]; then
         spotdl download "$URL" "${SPOTDL_FORMAT_ARGS[@]}"
     fi
 
-    # Extract embedded artwork into cover.jpg (only scanning folders modified in the last 15 mins)
+    # Extract embedded artwork into cover.jpg
     find . -mmin -15 -type f -name "*.mp3" | while read -r song; do
         album_dir="$(dirname "$song")"
         if [ ! -f "$album_dir/cover.jpg" ]; then
             ffmpeg -y -i "$song" -an -vcodec copy "$album_dir/cover.jpg" >/dev/null 2>&1 || true
         fi
     done
+
 # ==========================================
 # STANDARD URL HANDLING (Using yt-dlp)
 # ==========================================
@@ -89,21 +89,21 @@ else
             --print "%(playlist_title|Unknown)s" "$URL" 2>/dev/null | head -n1)
         PL_TITLE="${PL_TITLE:-Unknown}"
         
-        # Sanitize for Android/FAT32 filesystem restrictions (\ / : * ? " < > |)
-	CLEAN_PL_TITLE=$(echo "$PL_TITLE" | tr '/' '-')
-	TARGET_M3U="$PLAYLIST_DIR/$CLEAN_PL_TITLE.m3u"
+        RAW_M3U="$PLAYLIST_DIR/$PL_TITLE.m3u"
+        CLEAN_PL_TITLE=$(echo "$PL_TITLE" | tr '/:*?"<>|\\' '-')
+        CLEAN_M3U="$ANDROID_PL_DIR/$CLEAN_PL_TITLE.m3u"
 
-        # Write extended M3U headers including raw playlist title
+        # Write extended M3U headers
         {
             echo "#EXTM3U"
             echo "#PLAYLIST:$PL_TITLE"
-        } > "$TARGET_M3U"
+        } > "$RAW_M3U"
 
         PLAYLIST_ARGS+=(
             --no-simulate
             --print-to-file
             "video:../%(artist,uploader|Unknown)s/%(album,playlist_title|Unknown)s/%(title)s.mp3"
-            "$TARGET_M3U"
+            "$RAW_M3U"
         )
     fi
 
@@ -125,6 +125,12 @@ else
         --exec "f=%(filepath)q; rm -f \"\${f%.*}.jpg\"" \
         "${PLAYLIST_ARGS[@]}" \
         "$URL"
+        
+    # Copy the populated raw M3U to the sanitized android folder
+    if $PLAYLIST_FLAG && [ -f "$RAW_M3U" ]; then
+        cp "$RAW_M3U" "$CLEAN_M3U"
+        echo "Successfully created playlist: $PL_TITLE.m3u"
+    fi
 fi
 
 popd > /dev/null

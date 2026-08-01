@@ -207,6 +207,28 @@ xdg.configFile."sway/config" = {
 		'';
 	};
 
+	services.syncthing = {
+	    enable = true;
+	    settings = {
+
+		devices = {
+		    "p-server" = {
+			id = "INMXVKL-CHM7Q7N-Q652UUA-UQ4AD3R-KGTUA6V-W4JOUAK-3QU7K5T-VGROAAX";
+		    };
+		};
+		folders = {
+		    "Music" = {
+			path = config.xdg.userDirs.music;
+			devices = [ "p-server" ];
+		    };
+		    "AndroidPlaylists" = {
+		      path = "${config.home.homeDirectory}/.android_playlists";
+		      devices = [ "p-server" ];
+		    };
+		};
+	    };
+	};
+
 	xdg.userDirs={
 		enable=true;
 		createDirectories=true;
