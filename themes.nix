@@ -4,17 +4,17 @@
   themes = {
     tokyonight = {
       background = "#1a1b26";
-      backgroundPanel = "#80000000";
-      foreground = "#ffffff";
+      backgroundPanel = "#801a1b26";
+      foreground = "#c0caf5";
       muted = "#565f89";
 
-      accent2 = "#7aa2f7";
-      accent1 = "#00f7ff";
-      accent3 = "#40eb34";
+      accent1 = "#7dcfff";
+      accent2 = "#7aa2f7"; # Window manager highlight
+      accent3 = "#9ece6a";
       accent4 = "#e0af68";
-      accent5 = "#ff8000";
+      accent5 = "#ff9e64";
       accent6 = "#f7768e";
-      accent7 = "#c800ff";
+      accent7 = "#bb9af7";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -30,13 +30,13 @@
       foreground = "#eceff4";
       muted = "#4c566a";
 
-      accent2 = "#88c0d0";
-      accent1 = "#8fbcbb";
-      accent3 = "#a3be8c";
-      accent4 = "#ebcb8b";
-      accent5 = "#d08770";
-      accent6 = "#bf616a";
-      accent7 = "#b48ead";
+      accent1 = "#8fbcbb"; # Frost ice cyan
+      accent2 = "#88c0d0"; # Frost blue
+      accent3 = "#81a1c1"; # Deep frost
+      accent4 = "#ebcb8b"; # Aurora yellow
+      accent5 = "#d08770"; # Aurora orange
+      accent6 = "#bf616a"; # Aurora red
+      accent7 = "#b48ead"; # Aurora purple
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -52,13 +52,13 @@
       foreground = "#cdd6f4";
       muted = "#585b70";
 
-      accent2 = "#8caaee";
-      accent1 = "#81c8be";
-      accent3 = "#a6d189";
-      accent4 = "#e5c890";
-      accent5 = "#ef9f76";
-      accent6 = "#e78284";
-      accent7 = "#ca9ee6";
+      accent1 = "#89dceb"; # Sky
+      accent2 = "#89b4fa"; # Blue
+      accent3 = "#a6e3a1"; # Green
+      accent4 = "#f9e2af"; # Yellow
+      accent5 = "#fab387"; # Peach
+      accent6 = "#f38ba8"; # Red
+      accent7 = "#cba6f7"; # Mauve
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -67,14 +67,15 @@
       barColor = "#181825";
       barOpacity = 0.85;
     };
+
     gruvbox = {
       background = "#282828";
       backgroundPanel = "#80282828";
       foreground = "#ebdbb2";
       muted = "#928374";
 
-      accent2 = "#83a598";
       accent1 = "#8ec07c";
+      accent2 = "#83a598";
       accent3 = "#b8bb26";
       accent4 = "#fabd2f";
       accent5 = "#fe8019";
@@ -95,13 +96,13 @@
       foreground = "#f8f8f2";
       muted = "#6272a4";
 
-      accent2 = "#8be9fd";
-      accent1 = "#8be9fd";
-      accent3 = "#50fa7b";
-      accent4 = "#f1fa8c";
-      accent5 = "#ffb86c";
-      accent6 = "#ff5555";
-      accent7 = "#bd93f9";
+      accent1 = "#8be9fd"; # Cyan
+      accent2 = "#bd93f9"; # Purple
+      accent3 = "#50fa7b"; # Green
+      accent4 = "#f1fa8c"; # Yellow
+      accent5 = "#ffb86c"; # Orange
+      accent6 = "#ff5555"; # Red
+      accent7 = "#ff79c6"; # Pink
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -117,8 +118,8 @@
       foreground = "#839496";
       muted = "#586e75";
 
-      accent2 = "#268bd2";
       accent1 = "#2aa198";
+      accent2 = "#268bd2";
       accent3 = "#859900";
       accent4 = "#b58900";
       accent5 = "#cb4b16";
@@ -133,36 +134,14 @@
       barOpacity = 0.85;
     };
 
-    e_ink_light = {
-      background = "#ffffff";
-      backgroundPanel = "#e6ffffff"; 
-      foreground = "#000000"; 
-      muted = "#666666";
-
-      accent2 = "#0055cc";
-      accent1 = "#008888";
-      accent3 = "#008800";
-      accent4 = "#996600";
-      accent5 = "#cc5500";
-      accent6 = "#dd0000";
-      accent7 = "#880088";
-
-      font = "JetBrainsMono Nerd Font";
-      uiFontSize = 10;
-      barFontSize = 13;
-
-      barColor = "#eeeeee";
-      barOpacity = 0.95;
-    };
-
     tokyonight_day_hc = {
       background = "#e1e2e7";
       backgroundPanel = "#e6e1e2e7";
-      foreground = "#111118"; # Deep, near-black blue instead of soft blue
+      foreground = "#111118";
       muted = "#6a739d";
 
-      accent2 = "#1e5cc2";
       accent1 = "#005c7a";
+      accent2 = "#1e5cc2";
       accent3 = "#436821";
       accent4 = "#825d25";
       accent5 = "#a14d00";
@@ -180,11 +159,11 @@
     gruvbox_light_hc = {
       background = "#fbf1c7";
       backgroundPanel = "#e6fbf1c7";
-      foreground = "#1d2021"; # Hard dark contrast
+      foreground = "#1d2021";
       muted = "#7c6f64";
 
-      accent2 = "#076678";
       accent1 = "#427b58";
+      accent2 = "#076678";
       accent3 = "#79740e";
       accent4 = "#b57614";
       accent5 = "#af3a03";
@@ -198,19 +177,21 @@
       barColor = "#ebdbb2";
       barOpacity = 0.95;
     };
+
     aurora = {
+      # Cosmic starry night with vibrant electric neons
       background = "#0b1117";
       backgroundPanel = "#cc0b1117";
       foreground = "#d9f6ff";
       muted = "#5f7b8c";
 
-      accent2 = "#3ddbd9";
-      accent1 = "#3ddbd9";
-      accent3 = "#7ce38b";
-      accent4 = "#ffd866";
-      accent5 = "#ff9e64";
-      accent6 = "#ff6b81";
-      accent7 = "#bb9af7";
+      accent1 = "#00f5d4"; # Electric turquoise
+      accent2 = "#00bbf9"; # Aurora blue
+      accent3 = "#38b000"; # Emerald glow
+      accent4 = "#fee440"; # Star yellow
+      accent5 = "#ff70a6"; # Neon pink
+      accent6 = "#f15bb5"; # Magenta light
+      accent7 = "#9b5de5"; # Cosmic violet
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -219,285 +200,235 @@
       barColor = "#111b24";
       barOpacity = 0.90;
     };
-    obsidian = {
-  background = "#080808";
-  backgroundPanel = "#d9080808";
-  foreground = "#f3f3f3";
-  muted = "#666666";
 
-  accent2 = "#d0d0d0";
-  accent1 = "#66d9ef";
-  accent3 = "#89d185";
-  accent4 = "#ffd75f";
-  accent5 = "#ff9955";
-  accent6 = "#ff5f5f";
-  accent7 = "#af87ff";
+    forest = {
+      # Natural, earthy, deep woodland shades & mist tones
+      background = "#161d18";
+      backgroundPanel = "#cc161d18";
+      foreground = "#e6efe7";
+      muted = "#708070";
 
-  font = "JetBrainsMono Nerd Font";
-  uiFontSize = 10;
-  barFontSize = 13;
+      accent1 = "#52b788"; # Pine green
+      accent2 = "#74c69d"; # Sage leaf
+      accent3 = "#95d5b2"; # Moss green
+      accent4 = "#d8f3dc"; # Pale mint
+      accent5 = "#ddb892"; # Birch bark
+      accent6 = "#b08968"; # Rich timber
+      accent7 = "#6b9080"; # Forest mist
 
-  barColor = "#111111";
-  barOpacity = 0.92;
-};
-forest = {
-  background = "#161d18";
-  backgroundPanel = "#cc161d18";
-  foreground = "#e6efe7";
-  muted = "#708070";
+      font = "JetBrainsMono Nerd Font";
+      uiFontSize = 10;
+      barFontSize = 13;
 
-  accent2 = "#7ec16e";
-  accent1 = "#5cbf9f";
-  accent3 = "#7ec16e";
-  accent4 = "#d9c76c";
-  accent5 = "#d48b4b";
-  accent6 = "#d16d6d";
-  accent7 = "#9a86d6";
+      barColor = "#1e2a22";
+      barOpacity = 0.88;
+    };
 
-  font = "JetBrainsMono Nerd Font";
-  uiFontSize = 10;
-  barFontSize = 13;
+    sunset = {
+      # Warm dusk horizon: oranges, deep pinks, twilight purples
+      background = "#2b1f28";
+      backgroundPanel = "#cc2b1f28";
+      foreground = "#fff2e8";
+      muted = "#aa8d8d";
 
-  barColor = "#1e2a22";
-  barOpacity = 0.88;
-};
-sunset = {
-  background = "#2b1f28";
-  backgroundPanel = "#cc2b1f28";
-  foreground = "#fff2e8";
-  muted = "#aa8d8d";
+      accent1 = "#f72585"; # Vibrant magenta sky
+      accent2 = "#ff9f43"; # Deep twilight purple
+      accent3 = "#3f37c9"; # Dusk blue
+      accent4 = "#f8961e"; # Sunset orange
+      accent5 = "#f9c74f"; # Golden horizon
+      accent6 = "#f94144"; # Crimson sun
+      accent7 = "#b5179e"; # Plum twilight
 
-  accent2 = "#ff9f43";
-  accent1 = "#67d7d0";
-  accent3 = "#9bd16d";
-  accent4 = "#ffd166";
-  accent5 = "#ff9f43";
-  accent6 = "#ff5d73";
-  accent7 = "#d291ff";
+      font = "JetBrainsMono Nerd Font";
+      uiFontSize = 10;
+      barFontSize = 13;
 
-  font = "JetBrainsMono Nerd Font";
-  uiFontSize = 10;
-  barFontSize = 13;
+      barColor = "#3a2635";
+      barOpacity = 0.90;
+    };
 
-  barColor = "#3a2635";
-  barOpacity = 0.90;
-};
-matrix = {
-  background = "#020402";
-  backgroundPanel = "#d9020402";
-  foreground = "#6eff6e";
-  muted = "#2f5f2f";
+    matrix = {
+      # Monochromatic digital rain — varying hues of neon, lime & cyber green
+      background = "#020402";
+      backgroundPanel = "#d9020402";
+      foreground = "#6eff6e";
+      muted = "#2f5f2f";
 
-  accent2 = "#6eff6e";
-  accent1 = "#4fffc8";
-  accent3 = "#6eff6e";
-  accent4 = "#d0ff4f";
-  accent5 = "#ffa040";
-  accent6 = "#ff5c5c";
-  accent7 = "#b266ff";
+      accent1 = "#00ff66"; # Bright matrix green
+      accent2 = "#00cc44"; # Terminal green
+      accent3 = "#33ff33"; # Neon lime
+      accent4 = "#00ffaa"; # Mint cyber green
+      accent5 = "#88ff00"; # Yellow-green phosphor
+      accent6 = "#009933"; # Deep emerald code
+      accent7 = "#66ff99"; # Light phosphor code
 
-  font = "JetBrainsMono Nerd Font";
-  uiFontSize = 10;
-  barFontSize = 13;
+      font = "JetBrainsMono Nerd Font";
+      uiFontSize = 10;
+      barFontSize = 13;
 
-  barColor = "#071107";
-  barOpacity = 0.93;
-};
-rosepine = {
-  background = "#191724";
-  backgroundPanel = "#cc191724";
-  foreground = "#e0def4";
-  muted = "#6e6a86";
+      barColor = "#071107";
+      barOpacity = 0.93;
+    };
 
-  accent2 = "#c4a7e7";
-  accent1 = "#9ccfd8";
-  accent3 = "#95b1ac";
-  accent4 = "#f6c177";
-  accent5 = "#ebbcba";
-  accent6 = "#eb6f92";
-  accent7 = "#c4a7e7";
+    rosepine = {
+      # Authentic Rosé Pine palette (Foam, Iris, Pine, Gold, Rose, Love)
+      background = "#191724";
+      backgroundPanel = "#cc191724";
+      foreground = "#e0def4";
+      muted = "#6e6a86";
 
-  font = "JetBrainsMono Nerd Font";
-  uiFontSize = 10;
-  barFontSize = 13;
+      accent1 = "#9ccfd8"; # Foam
+      accent2 = "#c4a7e7"; # Iris
+      accent3 = "#31748f"; # Pine
+      accent4 = "#f6c177"; # Gold
+      accent5 = "#ebbcba"; # Rose
+      accent6 = "#eb6f92"; # Love
+      accent7 = "#e0def4"; # Muted text glow
 
-  barColor = "#232136";
-  barOpacity = 0.88;
-};
-paper = {
-  background = "#f5f3ee";
-  backgroundPanel = "#edf5f3ee";
-  foreground = "#202020";
-  muted = "#707070";
+      font = "JetBrainsMono Nerd Font";
+      uiFontSize = 10;
+      barFontSize = 13;
 
-  accent2 = "#202020";
-  accent1 = "#2f8f9d";
-  accent3 = "#4d7d42";
-  accent4 = "#9a7a28";
-  accent5 = "#c05b20";
-  accent6 = "#bb3f3f";
-  accent7 = "#7f5ab6";
+      barColor = "#232136";
+      barOpacity = 0.88;
+    };
 
-  font = "JetBrainsMono Nerd Font";
-  uiFontSize = 10;
-  barFontSize = 13;
+    vaporwave = {
+      # 80s Synthwave aesthetic: Laser Cyan, Hot Pink, Neon Purple
+      background = "#18142a";
+      backgroundPanel = "#cc18142a";
+      foreground = "#f5f0ff";
+      muted = "#8c83b5";
 
-  barColor = "#ebe6db";
-  barOpacity = 0.96;
-};
-vaporwave = {
-  background = "#18142a";
-  backgroundPanel = "#cc18142a";
-  foreground = "#f5f0ff";
-  muted = "#8c83b5";
+      accent1 = "#00f0ff"; # Laser cyan
+      accent2 = "#ff007f"; # Hot pink
+      accent3 = "#00ff9f"; # Synth mint
+      accent4 = "#ffe600"; # Neon yellow
+      accent5 = "#ff8800"; # Sunset orange
+      accent6 = "#ff0055"; # Neon red
+      accent7 = "#bd00ff"; # Electric violet
 
-  accent2 = "#ff5ea8";
-  accent1 = "#5cf2ff";
-  accent3 = "#6dffb8";
-  accent4 = "#ffe066";
-  accent5 = "#ffb347";
-  accent6 = "#ff5ea8";
-  accent7 = "#d86bff";
+      font = "JetBrainsMono Nerd Font";
+      uiFontSize = 10;
+      barFontSize = 13;
 
-  font = "JetBrainsMono Nerd Font";
-  uiFontSize = 10;
-  barFontSize = 13;
+      barColor = "#241c3d";
+      barOpacity = 0.90;
+    };
 
-  barColor = "#241c3d";
-  barOpacity = 0.90;
-};
-oled = {
-  background = "#000000";
-  backgroundPanel = "#d9000000";
-  foreground = "#ffffff";
-  muted = "#555555";
+    oled = {
+      # High-contrast pure neon pops on absolute OLED black
+      background = "#000000";
+      backgroundPanel = "#d9000000";
+      foreground = "#ffffff";
+      muted = "#555555";
 
-  accent2 = "#ffffff";
-  accent1 = "#39d0d8";
-  accent3 = "#3fb950";
-  accent4 = "#f2cc60";
-  accent5 = "#ff9d57";
-  accent6 = "#ff6b6b";
-  accent7 = "#bc8cff";
+      accent1 = "#00ffff"; # Pure cyan
+      accent2 = "#007eff"; # Electric blue
+      accent3 = "#00ff00"; # Pure green
+      accent4 = "#ffff00"; # Pure yellow
+      accent5 = "#ff7f00"; # Pure orange
+      accent6 = "#ff0033"; # Pure red
+      accent7 = "#e000ff"; # Pure magenta
 
-  font = "JetBrainsMono Nerd Font";
-  uiFontSize = 10;
-  barFontSize = 13;
+      font = "JetBrainsMono Nerd Font";
+      uiFontSize = 10;
+      barFontSize = 13;
 
-  barColor = "#080808";
-  barOpacity = 0.95;
-};
-synthwave84 = {
-  background = "#241b2f";
-  backgroundPanel = "#cc241b2f";
-  foreground = "#f8f8f2";
-  muted = "#7b6c99";
+      barColor = "#080808";
+      barOpacity = 0.95;
+    };
 
-  accent2 = "#ff4d94";
-  accent1 = "#72f1b8";
-  accent3 = "#a1ff6b";
-  accent4 = "#fede5d";
-  accent5 = "#ff8b39";
-  accent6 = "#ff4d94";
-  accent7 = "#ff7edb";
+    abyss = {
+      # Deep ocean trench with bioluminescent plankton & jellyfish glows
+      background = "#04080d";
+      backgroundPanel = "#cc04080d";
+      foreground = "#d4f1f9";
+      muted = "#3a5a66";
 
-  font = "JetBrainsMono Nerd Font";
-  uiFontSize = 10;
-  barFontSize = 13;
+      accent1 = "#00f5ff"; # Bioluminescent teal
+      accent2 = "#00a8ff"; # Deep ocean cyan
+      accent3 = "#00ffaa"; # Seafoam glow
+      accent4 = "#7000ff"; # Abyssal violet
+      accent5 = "#ff00aa"; # Jellyfish magenta
+      accent6 = "#0033ff"; # Deep trench blue
+      accent7 = "#00ebd6"; # Electric plankton
 
-  barColor = "#34294f";
-  barOpacity = 0.90;
-};
-abyss = {
-  # bioluminescent deep sea — near-black water, glowing plankton accents
-  background = "#04080d";
-  backgroundPanel = "#cc04080d";
-  foreground = "#d4f1f9";
-  muted = "#3a5a66";
+      font = "JetBrainsMono Nerd Font";
+      uiFontSize = 10;
+      barFontSize = 13;
 
-  accent2 = "#00d9ff";
-  accent1 = "#00ffb3";
-  accent3 = "#5fffa8";
-  accent4 = "#ffe86b";
-  accent5 = "#ff8f5e";
-  accent6 = "#ff4d6a";
-  accent7 = "#a06bff";
+      barColor = "#0a1218";
+      barOpacity = 0.90;
+    };
 
-  font = "JetBrainsMono Nerd Font";
-  uiFontSize = 10;
-  barFontSize = 13;
+    wildberry = {
+      # Rich fruit, wine, plum, and berry tones
+      background = "#1c0f1a";
+      backgroundPanel = "#cc1c0f1a";
+      foreground = "#f3e3ee";
+      muted = "#7a5a72";
 
-  barColor = "#0a1218";
-  barOpacity = 0.90;
-};
+      accent1 = "#e056fd"; # Vibrant berry
+      accent2 = "#be2edd"; # Deep plum
+      accent3 = "#ff7979"; # Cranberry
+      accent4 = "#badc58"; # Gooseberry leaf
+      accent5 = "#f0932b"; # Apricot
+      accent6 = "#eb4d4b"; # Raspberry
+      accent7 = "#686de0"; # Blueberry
 
-wildberry = {
-  # deep wine and berry tones, moody and rich
-  background = "#1c0f1a";
-  backgroundPanel = "#cc1c0f1a";
-  foreground = "#f3e3ee";
-  muted = "#7a5a72";
+      font = "JetBrainsMono Nerd Font";
+      uiFontSize = 10;
+      barFontSize = 13;
 
-  accent2 = "#c65daa";
-  accent1 = "#e0719c";
-  accent3 = "#9fce6b";
-  accent4 = "#e8c15c";
-  accent5 = "#e07a4f";
-  accent6 = "#d1425f";
-  accent7 = "#9a5ce0";
+      barColor = "#2b1826";
+      barOpacity = 0.90;
+    };
 
-  font = "JetBrainsMono Nerd Font";
-  uiFontSize = 10;
-  barFontSize = 13;
+    copperfield = {
+      # Warm foundry tones: polished copper, rust, brass, and verdigris patina
+      background = "#1f1712";
+      backgroundPanel = "#cc1f1712";
+      foreground = "#f2e4d3";
+      muted = "#8a7159";
 
-  barColor = "#2b1826";
-  barOpacity = 0.90;
-};
+      accent1 = "#e58e26"; # Polished copper
+      accent2 = "#b71540"; # Burnt brick red
+      accent3 = "#38ada9"; # Verdigris patina
+      accent4 = "#f6b93b"; # Brass yellow
+      accent5 = "#e55039"; # Rust red
+      accent6 = "#78e08f"; # Oxidized bronze
+      accent7 = "#fa983a"; # Amber glow
 
-copperfield = {
-  # warm copper, rust, and burnt sienna — autumn foundry vibes
-  background = "#1f1712";
-  backgroundPanel = "#cc1f1712";
-  foreground = "#f2e4d3";
-  muted = "#8a7159";
+      font = "JetBrainsMono Nerd Font";
+      uiFontSize = 10;
+      barFontSize = 13;
 
-  accent2 = "#c98a4b";
-  accent1 = "#d9a86c";
-  accent3 = "#9caf5a";
-  accent4 = "#e0a83e";
-  accent5 = "#cc5f2e";
-  accent6 = "#b8452f";
-  accent7 = "#a06a8f";
+      barColor = "#2c2119";
+      barOpacity = 0.90;
+    };
 
-  font = "JetBrainsMono Nerd Font";
-  uiFontSize = 10;
-  barFontSize = 13;
+    glacier = {
+      # Crisp arctic light theme: icy blues, cold slate, and frost cyan
+      background = "#eef5f7";
+      backgroundPanel = "#e6eef5f7";
+      foreground = "#132b33";
+      muted = "#5f7d85";
 
-  barColor = "#2c2119";
-  barOpacity = 0.90;
-};
+      accent1 = "#00a8cc"; # Glacial cyan
+      accent2 = "#27496d"; # Deep ice blue
+      accent3 = "#438a5e"; # Pine teal
+      accent4 = "#f0a500"; # Arctic sun amber
+      accent5 = "#e8505b"; # Polar red
+      accent6 = "#142850"; # Deep slate navy
+      accent7 = "#80d4ff"; # Frost blue
 
-glacier = {
-  # cool icy light theme — crisp whites and glacial blues
-  background = "#eef5f7";
-  backgroundPanel = "#e6eef5f7";
-  foreground = "#132b33";
-  muted = "#5f7d85";
+      font = "JetBrainsMono Nerd Font";
+      uiFontSize = 10;
+      barFontSize = 13;
 
-  accent2 = "#0e7c9e";
-  accent1 = "#1aa39a";
-  accent3 = "#4c8f4a";
-  accent4 = "#b8860b";
-  accent5 = "#c2622f";
-  accent6 = "#c23b3b";
-  accent7 = "#7a5ba6";
-
-  font = "JetBrainsMono Nerd Font";
-  uiFontSize = 10;
-  barFontSize = 13;
-
-  barColor = "#dbe9ed";
-  barOpacity = 0.95;
-};
+      barColor = "#dbe9ed";
+      barOpacity = 0.95;
+    };
   };
 }
