@@ -27,56 +27,83 @@ pushd "$MUSIC_DIR" > /dev/null || exit 1
 # ==========================================
 if [[ "$URL" == *"spotify.com"* ]]; then
     echo "Spotify link detected. Utilizing spotdl..."
-    
-    SPOTDL_OUTPUT=$(mktemp)
-    
-    SPOTDL_ARGS=(
+
+    SPOTDL_FORMAT_ARGS=(
         "--format" "mp3"
         "--output" "{artist}/{album}/{title}.{output-ext}"
     )
-    
+
     if $PLAYLIST_FLAG; then
-        SPOTDL_ARGS+=("--m3u" "$PLAYLIST_DIR/{list}.m3u")
+        echo "Fetching exact playlist title from Spotify..."
+        
+        # Scrape raw title from Spotify metadata
+        PL_TITLE=$(curl -sL "$URL" | \
+            sed -n 's/.*<meta property="og:title" content="\([^"]*\)".*/\1/p' | \
+            sed -e 's/&lt;/</g' -e 's/&gt;/>/g' -e 's/&amp;/\&/g' -e "s/&#0*39;/'/g" -e 's/&quot;/"/g')
+            
+        PL_TITLE="${PL_TITLE:-Unknown}"
+        
+        CLEAN_PL_TITLE=$(echo "$PL_TITLE" | tr '/' '-')
+        TARGET_M3U="$PLAYLIST_DIR/$CLEAN_PL_TITLE.m3u"
+        TMP_M3U_NAME="temp-spotdl-$(date +%s).m3u"
+        
+        echo "Preserving internal playlist name: $PL_TITLE"
+        echo "Sanitized filename for disk: $CLEAN_PL_TITLE.m3u"
+
+        # Download songs AND write playlist in a SINGLE pass
+        spotdl download "$URL" "${SPOTDL_FORMAT_ARGS[@]}" --m3u "Playlists/$TMP_M3U_NAME"
+
+        # Inject #PLAYLIST header and save to sanitized filename
+        if [ -f "Playlists/$TMP_M3U_NAME" ]; then
+            {
+                echo "#EXTM3U"
+                echo "#PLAYLIST:$PL_TITLE"
+                grep -v '^#EXTM3U' "Playlists/$TMP_M3U_NAME"
+            } > "$TARGET_M3U"
+            
+            rm -f "Playlists/$TMP_M3U_NAME"
+            echo "Successfully created playlist: $CLEAN_PL_TITLE.m3u"
+        else
+            echo "Error: Failed to generate playlist file."
+        fi
+    else
+        spotdl download "$URL" "${SPOTDL_FORMAT_ARGS[@]}"
     fi
 
-    spotdl download "$URL" "${SPOTDL_ARGS[@]}" | tee "$SPOTDL_OUTPUT"
-
-    # Extract embedded artwork into a separate cover.jpg file per album folder
-    find . -type f -name "*.mp3" | while read -r song; do
+    # Extract embedded artwork into cover.jpg (only scanning folders modified in the last 15 mins)
+    find . -mmin -15 -type f -name "*.mp3" | while read -r song; do
         album_dir="$(dirname "$song")"
         if [ ! -f "$album_dir/cover.jpg" ]; then
             ffmpeg -y -i "$song" -an -vcodec copy "$album_dir/cover.jpg" >/dev/null 2>&1 || true
         fi
     done
-
-    # Rename spotdl's generated m3u file to the exact original Spotify playlist name
-    if $PLAYLIST_FLAG; then
-        PL_NAME=$(grep -oE "Found [0-9]+ songs in .+\(Playlist\)" "$SPOTDL_OUTPUT" | sed -E 's/Found [0-9]+ songs in (.*) \(Playlist\)/\1/' | tr -d '\r')
-        if [ -n "$PL_NAME" ]; then
-            # Linux allows colons, spaces, carets, and brackets. Only replace forward slashes if any exist.
-            CLEAN_PL_NAME=$(echo "$PL_NAME" | tr '/' '-')
-            TARGET_M3U="$PLAYLIST_DIR/$CLEAN_PL_NAME.m3u"
-            
-            # Find the most recently created .m3u file in the playlist directory
-            LATEST_M3U=$(ls -t "$PLAYLIST_DIR"/*.m3u 2>/dev/null | head -n 1)
-            if [ -n "$LATEST_M3U" ] && [ "$LATEST_M3U" != "$TARGET_M3U" ]; then
-                mv "$LATEST_M3U" "$TARGET_M3U"
-                echo "Renamed playlist file to exact name: $CLEAN_PL_NAME.m3u"
-            fi
-        fi
-    fi
-    rm -f "$SPOTDL_OUTPUT"
-
 # ==========================================
 # STANDARD URL HANDLING (Using yt-dlp)
 # ==========================================
 else
     echo "Standard link detected. Utilizing yt-dlp..."
-    
+
     PLAYLIST_ARGS=()
     if $PLAYLIST_FLAG; then
+        PL_TITLE=$(yt-dlp --flat-playlist --playlist-items 1 \
+            --print "%(playlist_title|Unknown)s" "$URL" 2>/dev/null | head -n1)
+        PL_TITLE="${PL_TITLE:-Unknown}"
+        
+        # Sanitize for Android/FAT32 filesystem restrictions (\ / : * ? " < > |)
+	CLEAN_PL_TITLE=$(echo "$PL_TITLE" | tr '/' '-')
+	TARGET_M3U="$PLAYLIST_DIR/$CLEAN_PL_TITLE.m3u"
+
+        # Write extended M3U headers including raw playlist title
+        {
+            echo "#EXTM3U"
+            echo "#PLAYLIST:$PL_TITLE"
+        } > "$TARGET_M3U"
+
         PLAYLIST_ARGS+=(
-            --exec "f=%(filename)q; printf '../%s\n' \"\${f%.*}.mp3\" >> \"$PLAYLIST_DIR/%(playlist_title|Unknown)s.m3u\""
+            --no-simulate
+            --print-to-file
+            "video:../%(artist,uploader|Unknown)s/%(album,playlist_title|Unknown)s/%(title)s.mp3"
+            "$TARGET_M3U"
         )
     fi
 

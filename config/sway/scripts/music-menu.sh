@@ -3,8 +3,6 @@
 command -v wmenu >/dev/null || { echo "wmenu not found"; exit 1; }
 command -v mpc >/dev/null || { echo "mpc not found"; exit 1; }
 
-# theme-switch rewrites this file at runtime; session env vars are only correct
-# until the first switch, since a running shell never re-reads its login env.
 COLORS_ENV="$HOME/.cache/theme-colors.sh"
 # shellcheck source=/dev/null
 [ -f "$COLORS_ENV" ] && . "$COLORS_ENV"
@@ -12,9 +10,9 @@ COLORS_ENV="$HOME/.cache/theme-colors.sh"
 HISTFILE="$HOME/.cache/wmenu-music-history"
 touch "$HISTFILE" 2>/dev/null
 
-SELECTION=$(
+# 1. Fetch current MPD items
+CURRENT_ITEMS=$(
   {
-    cat "$HISTFILE"
     mpc lsplaylists | sed 's/^/Playlist: /'
     mpc list album | grep '\S' | sed 's/^/Album: /'
     mpc listall | awk -F/ '{
@@ -27,7 +25,22 @@ SELECTION=$(
         print "Track: " fname
       }
     }'
-  } | awk '!seen[$0]++' | wmenu -f "$THM_FONT $THM_FONT_SIZE" -N "$THM_BG" -n "$THM_FG" -S "$THM_FG" -s "$THM_BG")
+  }
+)
+
+# 2. Prune dead entries from HISTFILE (only keep entries that exist in MPD)
+if [ -s "$HISTFILE" ]; then
+  VALID_HIST=$(grep -F -x -f "$HISTFILE" <(echo "$CURRENT_ITEMS") 2>/dev/null || true)
+  echo "$VALID_HIST" > "$HISTFILE"
+fi
+
+# 3. Combine valid history + current MPD items
+SELECTION=$(
+  {
+    cat "$HISTFILE"
+    echo "$CURRENT_ITEMS"
+  } | awk 'NF && !seen[$0]++' | wmenu -f "$THM_FONT $THM_FONT_SIZE" -N "$THM_BG" -n "$THM_FG" -S "$THM_FG" -s "$THM_BG"
+)
 
 [ -z "$SELECTION" ] && exit 0
 
