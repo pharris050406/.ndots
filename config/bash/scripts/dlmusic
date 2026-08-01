@@ -46,7 +46,7 @@ if [[ "$URL" == *"spotify.com"* ]]; then
         
         RAW_M3U="$PLAYLIST_DIR/$PL_TITLE.m3u"
         CLEAN_PL_TITLE=$(echo "$PL_TITLE" | tr '/:*?"<>|\\' '-')
-        CLEAN_M3U="$ANDROID_PL_DIR/$CLEAN_PL_TITLE.m3u"
+        CLEAN_M3U="$ANDROID_PL_DIR/$CLEAN_PL_TITLE.m3u8"
         TMP_M3U_NAME="temp-spotdl-$(date +%s).m3u"
 
         # Download songs AND write playlist in a SINGLE pass
@@ -69,11 +69,19 @@ if [[ "$URL" == *"spotify.com"* ]]; then
         spotdl download "$URL" "${SPOTDL_FORMAT_ARGS[@]}"
     fi
 
-    # Extract embedded artwork into cover.jpg
+    # Extract embedded artwork into cover.jpg, then strip it from the mp3 itself
+    # (ffmpeg refuses to edit files in-place, so we write to a temp file and swap it in)
     find . -mmin -15 -type f -name "*.mp3" | while read -r song; do
         album_dir="$(dirname "$song")"
         if [ ! -f "$album_dir/cover.jpg" ]; then
             ffmpeg -y -i "$song" -an -vcodec copy "$album_dir/cover.jpg" >/dev/null 2>&1 || true
+        fi
+
+        tmp_song="${song%.mp3}.stripped.mp3"
+        if ffmpeg -y -i "$song" -map 0:a:0 -c:a copy -vn "$tmp_song" >/dev/null 2>&1; then
+            mv "$tmp_song" "$song"
+        else
+            rm -f "$tmp_song"
         fi
     done
 
@@ -91,7 +99,7 @@ else
         
         RAW_M3U="$PLAYLIST_DIR/$PL_TITLE.m3u"
         CLEAN_PL_TITLE=$(echo "$PL_TITLE" | tr '/:*?"<>|\\' '-')
-        CLEAN_M3U="$ANDROID_PL_DIR/$CLEAN_PL_TITLE.m3u"
+        CLEAN_M3U="$ANDROID_PL_DIR/$CLEAN_PL_TITLE.m3u8"
 
         # Write extended M3U headers
         {
