@@ -184,7 +184,7 @@ pkgs.writeShellApplication {
     else
       # shellcheck source=/dev/null
       [ -f "$COLORS_ENV" ] && . "$COLORS_ENV"
-      CHOICE=$(get_ordered_themes | wmenu -p "Theme:" \
+      CHOICE=$(get_ordered_themes | wmenu \
           -f "''${THM_FONT:-monospace} ''${THM_FONT_SIZE:-10}" \
           -N "''${THM_BG:-1a1b26}" \
           -n "''${THM_FG:-ffffff}" \
