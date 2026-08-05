@@ -5,6 +5,7 @@ vim.o.winborder = "single"
 vim.o.wrap = false
 vim.o.tabstop = 4
 vim.o.swapfile = false
+vim.o.completeopt = "menu,menuone,noinsert,noselect"
 vim.g.mapleader = " "
 vim.keymap.set('n', '<leader>o', ':update<CR> :source<CR>')
 vim.keymap.set('n', '<leader>w', ':write<CR>')
@@ -39,9 +40,12 @@ end, { expr = true })
 
 require "telescope".setup({})
 local builtin = require("telescope.builtin")
-vim.keymap.set('n', '<leader>f', ":Telescope find_files<CR>")
-vim.keymap.set('n', '<leader>g', ":Telescope grep_string<CR>")
-vim.keymap.set('n', '<leader>h', ":Telescope help_tags<CR>")
+vim.keymap.set('n', '<leader>f', builtin.find_files, {desc = 'Telescope find files'})
+vim.keymap.set('n', '<leader>g', builtin.live_grep, {desc = 'Telescope live grep'})
+vim.keymap.set('n', '<leader>h', builtin.help_tags, {desc = 'Telescope help tags'})
+vim.keymap.set('n', '<leader>b', builtin.buffers, {desc = 'Telescope buffers'})
+
+
 vim.keymap.set('n', '<leader>cd', ":Ex<CR>")
 vim.lsp.enable({"lua_ls", "tinymist"})
  
