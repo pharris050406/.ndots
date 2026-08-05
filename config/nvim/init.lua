@@ -12,7 +12,6 @@ vim.keymap.set('n', '<leader>q', ':quit<CR>')
 vim.keymap.set('n', '<leader>lf', vim.lsp.buf.format)
 
 vim.pack.add({
-		{src = "https://github.com/vague2k/vague.nvim"},
 		{src="https://github.com/nvim-lua/plenary.nvim"},
 		{src="https://github.com/nvim-telescope/telescope.nvim"},
 		{src="https://github.com/neovim/nvim-lspconfig"},
@@ -59,8 +58,6 @@ local function load_theme()
 	return theme
 end
  
--- backgroundPanel in themes.nix is 8-digit #AARRGGBB (alpha prefix, for
--- mako/gtk/etc); nvim_set_hl only accepts 6-digit #RRGGBB, so drop the alpha.
 local function strip_alpha(hex)
 	if hex and #hex == 9 then
 		return "#" .. hex:sub(-6)
@@ -69,8 +66,6 @@ local function strip_alpha(hex)
 end
  
 local function apply_theme()
-	vim.cmd("colorscheme vague")
- 
 	local theme = load_theme()
 	if not theme then
 		return
