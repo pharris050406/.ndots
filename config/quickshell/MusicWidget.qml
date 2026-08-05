@@ -48,10 +48,10 @@ RowLayout {
                         musicLength = isNaN(lengthMicro) ? 0 : lengthMicro / 1000000;
 
                         if (status === "Playing") {
-                            musicState = "";
+                            musicState = "󰐊";
                             musicTrack = track;
                         } else if (status === "Paused") {
-                            musicState = "";
+                            musicState = "󰏤";
                             musicTrack = track;
                         } else {
                             musicState = "";
@@ -79,8 +79,8 @@ RowLayout {
 
     // --- STATIC PART (Icon + Status) ---
     Text {
-        Layout.preferredWidth: 35
-        text: "󰎇 " + musicState
+        Layout.preferredWidth: 15
+        text: musicState
         color: root.textColor
         font { family: root.fontName; pixelSize: root.fontSize }
     }
@@ -96,14 +96,11 @@ RowLayout {
         property bool needsScroll: false
         property real scrollDistance: 0
 
-        // 1. Break the binding: Calculate once per track change
         onTrackStringChanged: {
             scrollAnim.stop()
             scrollingRow.x = 0
 
-            // 2. Yield to the layout engine to finish updating text bounds
             Qt.callLater(() => {
-                // 3. Force integer math. Wayland/SwayFX often snaps text to integer pixels.
                 scrollDistance = Math.ceil(trackText1.implicitWidth + delimiterText.implicitWidth + (scrollingRow.spacing * 2))
                 needsScroll = trackText1.implicitWidth > (musicContainer.width - 5) && musicContainer.width > 0
 
@@ -111,7 +108,6 @@ RowLayout {
             })
         }
 
-        // Catch edge cases where the container resizes
         onWidthChanged: {
             var currentNeedsScroll = trackText1.implicitWidth > (musicContainer.width - 5) && musicContainer.width > 0
             if (!currentNeedsScroll) {
@@ -134,13 +130,12 @@ RowLayout {
                 text: musicContainer.trackString
                 color: root.textColor
                 font { family: root.fontName; pixelSize: root.fontSize }
-                renderType: Text.QtRendering // 4. Enables smoother subpixel animation
-            }
+                renderType: Text.QtRendering             }
 
             Text {
                 id: delimiterText
                 visible: musicContainer.needsScroll
-                text: "|"
+                text: " | "
                 color: root.textColor
                 font { family: root.fontName; pixelSize: root.fontSize }
                 renderType: Text.QtRendering
@@ -172,7 +167,7 @@ RowLayout {
     Text {
         visible: musicTrack !== "Not Playing" && musicTrack !== "Loading..."
         text: musicLength > 0
-            ? "(" + formatTime(musicPosition) + "/" + formatTime(musicLength) + ")"
+            ? " (" + formatTime(musicPosition) + "/" + formatTime(musicLength) + ")"
             : formatTime(musicPosition)
         color: root.textColor
         font { family: root.fontName; pixelSize: root.fontSize }

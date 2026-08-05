@@ -32,8 +32,8 @@ PanelWindow {
 
             WorkspaceWidget {
                 Layout.fillHeight: true
-                accentColor: theme.accent1 // Updated from theme.colCyan
-                textColor: theme.foreground // Updated from theme.colFg
+                accentColor: theme.accent1 
+                textColor: theme.foreground
                 fontName: theme.fontFamily
                 fontSize: theme.fontSize
             }
@@ -41,11 +41,11 @@ PanelWindow {
             Item { Layout.fillWidth: true }
 
             MusicWidget {
-                property int widget_width: 325
+                property int widget_width: 350
                 Layout.preferredWidth: widget_width 
                 Layout.maximumWidth: widget_width
                 Layout.fillHeight: true
-                accentColor: theme.accent2 // Updated from theme.colBlue
+                accentColor: theme.accent2 
                 textColor: theme.foreground
                 fontName: theme.fontFamily
                 fontSize: theme.fontSize
@@ -53,7 +53,7 @@ PanelWindow {
 
             BluetoothWidget {
                 Layout.fillHeight: true
-                accentColor: theme.accent2 // Updated from theme.colBlue
+                accentColor: theme.accent2 
                 textColor: theme.foreground
                 barColor: theme.barColor
                 barOpacity: theme.barOpacity
@@ -63,7 +63,7 @@ PanelWindow {
 
             VolumeWidget {
                 Layout.fillHeight: true
-                accentColor: theme.accent4 // Updated from theme.colYellow
+                accentColor: theme.accent4 
                 textColor: theme.foreground
                 fontName: theme.fontFamily
                 fontSize: theme.fontSize
@@ -71,7 +71,7 @@ PanelWindow {
 
             IpWidget {
                 Layout.fillHeight: true
-                accentColor: theme.accent3 // Updated from theme.colGreen
+                accentColor: theme.accent3 
                 textColor: theme.foreground
                 barColor: theme.barColor
                 barOpacity: theme.barOpacity
@@ -81,7 +81,7 @@ PanelWindow {
 
             MemWidget {
                 Layout.fillHeight: true
-                accentColor: theme.accent7 // Updated from theme.colPurple
+                accentColor: theme.accent7 
                 textColor: theme.foreground
                 fontName: theme.fontFamily
                 fontSize: theme.fontSize
@@ -89,7 +89,7 @@ PanelWindow {
 
             CpuWidget {
                 Layout.fillHeight: true
-                accentColor: theme.accent5 // Updated from theme.colOrange
+                accentColor: theme.accent5 
                 textColor: theme.foreground
                 fontName: theme.fontFamily
                 fontSize: theme.fontSize
@@ -102,7 +102,7 @@ PanelWindow {
                 visible: active 
                 source: "BatteryWidget.qml"
 
-                Binding { target: batteryLoader.item; property: "accentColor"; value: theme.accent3; when: batteryLoader.status === Loader.Ready } // Updated from colGreen
+                Binding { target: batteryLoader.item; property: "accentColor"; value: theme.accent3; when: batteryLoader.status === Loader.Ready } 
                 Binding { target: batteryLoader.item; property: "textColor"; value: theme.foreground; when: batteryLoader.status === Loader.Ready }
                 Binding { target: batteryLoader.item; property: "barColor"; value: theme.barColor; when: batteryLoader.status === Loader.Ready }
                 Binding { target: batteryLoader.item; property: "barOpacity"; value: theme.barOpacity; when: batteryLoader.status === Loader.Ready }
@@ -112,7 +112,7 @@ PanelWindow {
 
             ClockWidget {
                 Layout.fillHeight: true
-                accentColor: theme.muted // Updated from theme.colMuted
+                accentColor: theme.muted 
                 textColor: theme.foreground
                 fontName: theme.fontFamily
                 fontSize: theme.fontSize
