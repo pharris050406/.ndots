@@ -73,6 +73,8 @@ local function apply_theme()
  
 	local bg_panel = strip_alpha(theme.bg_panel)
  
+	vim.o.background = theme.is_light and "light" or "dark"
+ 
 	local hl = vim.api.nvim_set_hl
 	hl(0, "Normal", { bg = theme.bg, fg = theme.fg })
 	hl(0, "NormalFloat", { bg = bg_panel, fg = theme.fg })
@@ -86,10 +88,6 @@ local function apply_theme()
 	hl(0, "Search", { bg = theme.accent4, fg = theme.bg })
 	hl(0, "IncSearch", { bg = theme.accent5, fg = theme.bg })
 	hl(0, "Comment", { fg = theme.muted, italic = true })
-	hl(0, "DiagnosticError", { fg = theme.accent6 })
-	hl(0, "DiagnosticWarn", { fg = theme.accent4 })
-	hl(0, "DiagnosticInfo", { fg = theme.accent2 })
-	hl(0, "DiagnosticHint", { fg = theme.accent3 })
 end
  
 apply_theme()
@@ -107,4 +105,3 @@ if watcher then
 	end
 	watch()
 end
-

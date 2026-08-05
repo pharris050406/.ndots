@@ -11,6 +11,7 @@ let
       ACCENT5="${t.accent5}"; ACCENT6="${t.accent6}"; ACCENT7="${t.accent7}"
       FONT="${t.font}"; UI_FONT_SIZE="${toString t.uiFontSize}"; BAR_FONT_SIZE="${toString t.barFontSize}"
       BAR_COLOR="${t.barColor}"; BAR_OPACITY="${toString t.barOpacity}"
+      IS_LIGHT="${if (t.isLight or false) then "true" else "false"}"
       ;;
   '';
 
@@ -109,6 +110,7 @@ pkgs.writeShellApplication {
       accent6 = "$ACCENT6",
       accent7 = "$ACCENT7",
       font = "$FONT",
+      is_light = $IS_LIGHT,
     }
     EOF
 
