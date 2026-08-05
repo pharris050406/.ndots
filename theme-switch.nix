@@ -33,13 +33,14 @@ pkgs.writeShellApplication {
     GTK4_CSS="$HOME/.config/gtk-4.0/gtk.css"
     RMPC_TEMPLATE="$HOME/.ndots/config/rmpc/theme.ron.template"
     RMPC_THEME="$HOME/.config/rmpc/themes/ndots.ron"
+    NVIM_THEME_LUA="$HOME/.cache/nvim/theme.lua"
 
     render() {
       mkdir -p "$(dirname "$MAKO_CONF")" "$(dirname "$SWAY_THEME_CONF")" \
                "$(dirname "$QS_THEME_JSON")" "$(dirname "$COLORS_ENV")" \
                "$(dirname "$STATE_FILE")" "$(dirname "$HISTORY_FILE")" \
                "$(dirname "$GTK3_CSS")" "$(dirname "$GTK4_CSS")" \
-               "$(dirname "$RMPC_THEME")"
+               "$(dirname "$RMPC_THEME")" "$(dirname "$NVIM_THEME_LUA")"
 
       cat > "$MAKO_CONF" <<EOF
     font=$FONT $UI_FONT_SIZE
@@ -91,6 +92,24 @@ pkgs.writeShellApplication {
     export THM_BLUE="''${ACCENT2#\#}"
     export THM_FONT="$FONT"
     export THM_FONT_SIZE="$UI_FONT_SIZE"
+    EOF
+
+      cat > "$NVIM_THEME_LUA" <<EOF
+    return {
+      name = "$THEME_NAME",
+      bg = "$BACKGROUND",
+      bg_panel = "$BACKGROUND_PANEL",
+      fg = "$FOREGROUND",
+      muted = "$MUTED",
+      accent1 = "$ACCENT1",
+      accent2 = "$ACCENT2",
+      accent3 = "$ACCENT3",
+      accent4 = "$ACCENT4",
+      accent5 = "$ACCENT5",
+      accent6 = "$ACCENT6",
+      accent7 = "$ACCENT7",
+      font = "$FONT",
+    }
     EOF
 
       if [ -f "$RMPC_TEMPLATE" ]; then
@@ -194,3 +213,4 @@ pkgs.writeShellApplication {
     fi
   '';
 }
+

@@ -29,13 +29,17 @@ in
 		vesktop
 		obs-studio
 		libreoffice
+		zathura
 		mako
 		swaybg
 		wmenu
 		themeSwitch
-				    
+		
+
 		vlc
 		acpi
+		krita
+		vtracer
 		# nvim stuff
 		nixd
 		lua-language-server
@@ -235,6 +239,8 @@ xdg.configFile."sway/config" = {
 		pictures = "${config.home.homeDirectory}/Pictures";
 		music = "${config.home.homeDirectory}/Music";
 		download = "${config.home.homeDirectory}/Downloads";
+		documents = "${config.home.homeDirectory}/Documents";
+
 		extraConfig={
 			XDG_PLAYLISTS_DIR="${config.xdg.userDirs.music}/Playlists";
 			XDG_SCREENSHOTS_DIR = "${config.xdg.userDirs.pictures}/Screenshots";
@@ -245,7 +251,6 @@ xdg.configFile."sway/config" = {
 		templates = "${config.home.homeDirectory}";
 		publicShare = "${config.home.homeDirectory}";
 		desktop = "${config.home.homeDirectory}";
-		documents = "${config.home.homeDirectory}";
 	};
 	
 	xdg.configFile."qBittorrent/qBittorrent.ini".text = lib.generators.toINI {} {

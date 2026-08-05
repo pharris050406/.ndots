@@ -20,6 +20,7 @@ set $term foot
 
 
 
+bindsym $mod+shift+d exec ~/.ndots/config/sway/scripts/docmenu.sh
 bindsym $mod+m exec ~/.ndots/config/sway/scripts/music-menu.sh
 bindsym $mod+shift+t exec theme-switch
 
