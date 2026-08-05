@@ -20,7 +20,8 @@
 	nix.gc.dates = "daily";
 	nix.gc.options = "--delete-older-than 7d";
 	nix.settings.auto-optimise-store = true;
-
+		
+		formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixfmt-rfc-style;
 	# Use the systemd-boot EFI boot loader.
 	boot.loader.systemd-boot.enable = true;
 	boot.loader.efi.canTouchEfiVariables = true;

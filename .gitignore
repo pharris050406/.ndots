@@ -1,2 +1,2 @@
-config/sway/theme.conf
-config/rmpc/themes/ndots.ron
+config/rmpc/themes/
+*.zip
