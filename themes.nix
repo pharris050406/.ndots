@@ -9,7 +9,7 @@
       muted = "#565f89";
 
       accent1 = "#7dcfff";
-      accent2 = "#7aa2f7"; 
+      accent2 = "#7aa2f7";
       accent3 = "#9ece6a";
       accent4 = "#e0af68";
       accent5 = "#ff9e64";
@@ -30,13 +30,13 @@
       foreground = "#eceff4";
       muted = "#4c566a";
 
-      accent1 = "#8fbcbb"; 
-      accent2 = "#88c0d0"; 
-      accent3 = "#81a1c1"; 
-      accent4 = "#ebcb8b"; 
-      accent5 = "#d08770"; 
-      accent6 = "#bf616a"; 
-      accent7 = "#b48ead"; 
+      accent1 = "#8fbcbb";
+      accent2 = "#88c0d0";
+      accent3 = "#81a1c1";
+      accent4 = "#ebcb8b";
+      accent5 = "#d08770";
+      accent6 = "#bf616a";
+      accent7 = "#b48ead";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -52,13 +52,13 @@
       foreground = "#cdd6f4";
       muted = "#585b70";
 
-      accent1 = "#89dceb"; 
-      accent2 = "#89b4fa"; 
-      accent3 = "#a6e3a1"; 
-      accent4 = "#f9e2af"; 
-      accent5 = "#fab387"; 
-      accent6 = "#f38ba8"; 
-      accent7 = "#cba6f7"; 
+      accent1 = "#89dceb";
+      accent2 = "#89b4fa";
+      accent3 = "#a6e3a1";
+      accent4 = "#f9e2af";
+      accent5 = "#fab387";
+      accent6 = "#f38ba8";
+      accent7 = "#cba6f7";
 
       font = "JetBrainsMono Nerd Font";
       uiFontSize = 10;
@@ -424,4 +424,3 @@
     };
   };
 }
-

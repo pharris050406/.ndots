@@ -27,8 +27,9 @@ SELECTION=$(
     cat "$HISTFILE"
     echo "$CURRENT_ITEMS"
   } | awk 'NF && !seen[$0]++' \
-    | wmenu -i -p "doc" -f "$THM_FONT $THM_FONT_SIZE" \
-            -N "$THM_BG" -n "$THM_FG" -S "$THM_FG" -s "$THM_BG"
+    | wmenu -i -f "${THM_FONT:-monospace} ${THM_FONT_SIZE:-10}" \
+      -N "${THM_BG:-1a1b26}" -n "${THM_FG:-c0caf5}" \
+      -S "${THM_FG:-c0caf5}" -s "${THM_BG:-1a1b26}"
 )
 [ -z "$SELECTION" ] && exit 0
 

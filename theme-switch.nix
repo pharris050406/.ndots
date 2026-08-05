@@ -1,4 +1,8 @@
-{ pkgs, lib, themesData }:
+{
+  pkgs,
+  lib,
+  themesData,
+}:
 
 let
   inherit (themesData) themes;
@@ -20,7 +24,13 @@ let
 in
 pkgs.writeShellApplication {
   name = "theme-switch";
-  runtimeInputs = with pkgs; [ wmenu mako sway gawk gettext ];
+  runtimeInputs = with pkgs; [
+    wmenu
+    mako
+    sway
+    gawk
+    gettext
+  ];
   text = ''
     set -euo pipefail
 
@@ -30,8 +40,6 @@ pkgs.writeShellApplication {
     COLORS_ENV="$HOME/.cache/theme-colors.sh"
     STATE_FILE="$HOME/.local/state/ndots-theme"
     HISTORY_FILE="$HOME/.local/state/theme-history"
-    GTK3_CSS="$HOME/.config/gtk-3.0/gtk.css"
-    GTK4_CSS="$HOME/.config/gtk-4.0/gtk.css"
     RMPC_TEMPLATE="$HOME/.ndots/config/rmpc/theme.ron.template"
     RMPC_THEME="$HOME/.config/rmpc/themes/ndots.ron"
     NVIM_THEME_LUA="$HOME/.cache/nvim/theme.lua"
@@ -40,7 +48,6 @@ pkgs.writeShellApplication {
       mkdir -p "$(dirname "$MAKO_CONF")" "$(dirname "$SWAY_THEME_CONF")" \
                "$(dirname "$QS_THEME_JSON")" "$(dirname "$COLORS_ENV")" \
                "$(dirname "$STATE_FILE")" "$(dirname "$HISTORY_FILE")" \
-               "$(dirname "$GTK3_CSS")" "$(dirname "$GTK4_CSS")" \
                "$(dirname "$RMPC_THEME")" "$(dirname "$NVIM_THEME_LUA")"
 
       cat > "$MAKO_CONF" <<EOF
@@ -208,11 +215,10 @@ pkgs.writeShellApplication {
       CHOICE=$(get_ordered_themes | wmenu -i \
           -f "''${THM_FONT:-monospace} ''${THM_FONT_SIZE:-10}" \
           -N "''${THM_BG:-1a1b26}" \
-          -n "''${THM_FG:-ffffff}" \
-          -S "''${THM_FG:-ffffff}" \
+          -n "''${THM_FG:-c0caf5}" \
+          -S "''${THM_FG:-c0caf5}" \
           -s "''${THM_BG:-1a1b26}")
       [ -n "$CHOICE" ] && apply_theme "$CHOICE"
     fi
   '';
 }
-
