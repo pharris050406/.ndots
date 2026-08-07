@@ -7,7 +7,12 @@
 let
   themesData = import ./themes.nix;
   themeSwitch = import ./theme-switch.nix { inherit pkgs lib themesData; };
-    pyEnv = pkgs.python3.withPackages (ps: with ps; [ python-mpd2 pypresence ]);
+  pyEnv = pkgs.python3.withPackages (
+    ps: with ps; [
+      python-mpd2
+      pypresence
+    ]
+  );
 in
 {
   programs.git.enable = true;
@@ -43,7 +48,7 @@ in
     krita
     vtracer
     nixd
-	python3
+    python3
     bash-language-server
 
     #languages
@@ -62,7 +67,7 @@ in
       After = [ "graphical-session-pre.target" ];
     };
   };
-		# discord rpc from mpd im writing tags here to make it easy to find later
+  # discord rpc from mpd im writing tags here to make it easy to find later
   imports = [ ./mpd-rpc.nix ];
 
   services.mpd-rpc.enable = true;
@@ -78,32 +83,32 @@ in
       ncd = "cd ${config.home.homeDirectory}/.ndots";
     };
     initExtra = ''
-				[ -f "$HOME/.cache/theme-colors.sh" ] && . "$HOME/.cache/theme-colors.sh"
-      		    bb() {
-      		      ~/.config/bash/scripts/bluetooth_ctl.sh "$@"
-      		    }
+      				[ -f "$HOME/.cache/theme-colors.sh" ] && . "$HOME/.cache/theme-colors.sh"
+            		    bb() {
+            		      ~/.config/bash/scripts/bluetooth_ctl.sh "$@"
+            		    }
 
-      		    _bb_complete() {
-      		      local cur=''${COMP_WORDS[COMP_CWORD]}
-      		      local prev=''${COMP_WORDS[COMP_CWORD-1]}
+            		    _bb_complete() {
+            		      local cur=''${COMP_WORDS[COMP_CWORD]}
+            		      local prev=''${COMP_WORDS[COMP_CWORD-1]}
 
-      		      if [[ $COMP_CWORD -eq 1 ]]; then
-      			COMPREPLY=($(compgen -W "-s -c -d -r -l --scan --connect --disconnect --remove --list" -- "$cur"))
-      			return
-      		      fi
+            		      if [[ $COMP_CWORD -eq 1 ]]; then
+            			COMPREPLY=($(compgen -W "-s -c -d -r -l --scan --connect --disconnect --remove --list" -- "$cur"))
+            			return
+            		      fi
 
-      		      if [[ "$prev" == "-c" || "$prev" == "-d" || "$prev" == "-r" || \
-      			    "$prev" == "--connect" || "$prev" == "--disconnect" || "$prev" == "--remove" ]]; then
-      			local IFS=$'\n'
-      			while IFS= read -r name; do
-      			  COMPREPLY+=("$name")
-      			done < <(cat "$HOME/.btctl_devices" 2>/dev/null | cut -d' ' -f2- | sort -u | grep -i "^$cur")
-      			return
-      		      fi
-      		    }
+            		      if [[ "$prev" == "-c" || "$prev" == "-d" || "$prev" == "-r" || \
+            			    "$prev" == "--connect" || "$prev" == "--disconnect" || "$prev" == "--remove" ]]; then
+            			local IFS=$'\n'
+            			while IFS= read -r name; do
+            			  COMPREPLY+=("$name")
+            			done < <(cat "$HOME/.btctl_devices" 2>/dev/null | cut -d' ' -f2- | sort -u | grep -i "^$cur")
+            			return
+            		      fi
+            		    }
 
-      		    complete -o filenames -F _bb_complete bb
-      		  '';
+            		    complete -o filenames -F _bb_complete bb
+            		  '';
     profileExtra = ''
       		   if [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ]; then
       			exec sway --unsupported-gpu
@@ -220,7 +225,7 @@ in
 
       devices = {
         "p-server" = {
-				id = "INMXVKL-CHM7Q7N-Q652UUA-UQ4AD3R-KGTUA6V-W4JOUAK-3QU7K5T-VGROAAX";
+          id = "INMXVKL-CHM7Q7N-Q652UUA-UQ4AD3R-KGTUA6V-W4JOUAK-3QU7K5T-VGROAAX";
         };
       };
       folders = {
@@ -264,13 +269,13 @@ in
     };
   };
 
-home.activation.applyDefaultTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-  STATE_FILE="$HOME/.local/state/ndots-theme"
-  COLORS_ENV="$HOME/.cache/theme-colors.sh"
-  if [ ! -f "$COLORS_ENV" ]; then
-    WANT="${themesData.default}"
-    [ -f "$STATE_FILE" ] && WANT="$(cat "$STATE_FILE")"
-    $DRY_RUN_CMD ${themeSwitch}/bin/theme-switch "$WANT"
-  fi
-'';
+  home.activation.applyDefaultTheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    STATE_FILE="$HOME/.local/state/ndots-theme"
+    COLORS_ENV="$HOME/.cache/theme-colors.sh"
+    if [ ! -f "$COLORS_ENV" ]; then
+      WANT="${themesData.default}"
+      [ -f "$STATE_FILE" ] && WANT="$(cat "$STATE_FILE")"
+      $DRY_RUN_CMD ${themeSwitch}/bin/theme-switch "$WANT"
+    fi
+  '';
 }
