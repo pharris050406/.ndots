@@ -44,7 +44,7 @@ USER_AGENT = (
 )
 
 # Discord rate-limits presence updates; don't push faster than this.
-MIN_INTERVAL = 5.0
+MIN_INTERVAL = 4.0
 
 IPC_PATH = os.path.join(
     os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}"),
@@ -189,6 +189,7 @@ def cover_url(song_file):
 
     url = f"{COVER_BASE}/{urllib.parse.quote(album_dir)}/{COVER_NAME}"
     ok = False
+    definitive = False
     why = ""
     # Cloudflare and similar front ends reject urllib's default user agent,
     # and some reject HEAD outright, so send a normal UA and fall back to a
@@ -207,12 +208,25 @@ def cover_url(song_file):
                 why = f"HTTP {resp.status}"
         except urllib.error.HTTPError as err:
             why = f"HTTP {err.code}"
+            # 404 means the file genuinely isn't there. 5xx and friends are
+            # transient (tunnel hiccup, origin restart) and must not be
+            # remembered, or one blip hides the cover until the next restart.
+            if err.code == 404:
+                definitive = True
+                break
         except (urllib.error.URLError, OSError) as err:
             why = str(err)
 
-    if not ok:
+    if ok:
+        _cover_cache[album_dir] = url
+    elif definitive:
+        _cover_cache[album_dir] = None
         log(f"no cover ({why}) at {url}")
-    _cover_cache[album_dir] = url if ok else None
+    else:
+        # Not cached: retried on the next play of this album.
+        log(f"cover lookup failed ({why}), will retry: {url}")
+        return None
+
     return _cover_cache[album_dir]
 
 
@@ -307,4 +321,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
