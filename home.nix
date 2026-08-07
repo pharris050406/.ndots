@@ -7,6 +7,7 @@
 let
   themesData = import ./themes.nix;
   themeSwitch = import ./theme-switch.nix { inherit pkgs lib themesData; };
+    pyEnv = pkgs.python3.withPackages (ps: with ps; [ python-mpd2 pypresence ]);
 in
 {
   programs.git.enable = true;
@@ -42,6 +43,7 @@ in
     krita
     vtracer
     nixd
+	python3
     bash-language-server
 
     #languages
@@ -52,6 +54,18 @@ in
     # proprietary garbage
 
   ];
+  systemd.user.targets.sway-session = {
+    Unit = {
+      Description = "sway compositor session";
+      BindsTo = [ "graphical-session.target" ];
+      Wants = [ "graphical-session-pre.target" ];
+      After = [ "graphical-session-pre.target" ];
+    };
+  };
+		# discord rpc from mpd im writing tags here to make it easy to find later
+  imports = [ ./mpd-rpc.nix ];
+
+  services.mpd-rpc.enable = true;
 
   programs.bash = {
     enable = true;

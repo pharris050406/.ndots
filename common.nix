@@ -112,9 +112,9 @@
         name = "p";
         email = "111610330+pharris050406@users.noreply.github.com";
       };
-	  safe = {
-  directory = "${config.users.users.p.home}/.ndots";
-};
+      safe = {
+        directory = "${config.users.users.p.home}/.ndots";
+      };
     };
   };
 
@@ -128,10 +128,10 @@
     nerd-fonts.jetbrains-mono
   ];
 
-  	users.users.p = {
-		isNormalUser = true;
-		extraGroups = [ "wheel" ];  # Enable ‘sudo’ for the user.
-	};
+  users.users.p = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" ]; # Enable ‘sudo’ for the user.
+  };
 
   nix.settings.experimental-features = [
     "nix-command"

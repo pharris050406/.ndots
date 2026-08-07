@@ -73,11 +73,18 @@ if [[ "$URL" == *"spotify.com"* ]]; then
     find . -mmin -15 -type f -name "*.mp3" | while read -r song; do
         album_dir="$(dirname "$song")"
         if [ ! -f "$album_dir/cover.jpg" ]; then
-            ffmpeg -y -i "$song" -an -vcodec copy "$album_dir/cover.jpg" >/dev/null 2>&1 || true
+				if ! ffmpeg -v error -y -i "$song" -map 0:v:0 -frames:v 1 \
+                 "$album_dir/cover.jpg" </dev/null 2>/dev/null; then
+                rm -f "$album_dir/cover.jpg"
+                echo "WARN: no art extracted for $album_dir"
+            fi
         fi
 
+		[ -f "$album_dir/cover.jpg" ] || continue
+
         tmp_song="${song%.mp3}.stripped.mp3"
-        if ffmpeg -y -i "$song" -map 0:a:0 -c:a copy -vn "$tmp_song" >/dev/null 2>&1; then
+        if ffmpeg -y -i "$song" -map 0:a:0 -c:a copy -vn "$tmp_song" \
+             </dev/null >/dev/null 2>&1; then
             mv "$tmp_song" "$song"
         else
             rm -f "$tmp_song"
